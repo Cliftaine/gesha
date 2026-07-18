@@ -1,0 +1,16 @@
+{
+  "timezone": "America/Mexico_City",
+  "weather": {
+    "override": null,
+    "openMeteo": { "enabled": true, "cacheMinutes": 30 },
+    "mockDefault": { "tempC": 24 },
+    "locations": {
+      "centro": { "lat": 19.4326, "lon": -99.1332 }
+    }
+  },
+  "comidaServiceUrl": "http://localhost:3000/mock/comida",
+  "player": {
+    "pollSeconds": 60,
+    "dailyReloadAt": "04:30"
+  }
+}

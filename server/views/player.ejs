@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Manta Café — <%= sucursal %>/<%= pantalla %></title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1080px; height: 1920px;
+    transform-origin: center;
+    border: 0; background: #000;
+    transition: opacity .45s ease;
+  }
+  .stage.hidden { opacity: 0; pointer-events: none; }
+  #status {
+    position: fixed; right: 10px; bottom: 8px; z-index: 9;
+    font: 11px system-ui, sans-serif; color: rgba(255,255,255,.25);
+  }
+  /* Botón de pantalla completa: solo aparece si el navegador bloqueó el
+     intento automático (requiere gesto del usuario). Un toque en cualquier
+     parte de la pantalla también lo activa. */
+  #fs {
+    position: fixed; inset: 0; z-index: 20; display: none;
+    background: transparent; border: 0; cursor: pointer;
+  }
+  #fs span {
+    position: absolute; right: 24px; top: 24px;
+    font: 600 15px system-ui, sans-serif; color: rgba(255,255,255,.85);
+    background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.25);
+    border-radius: 10px; padding: 10px 16px; backdrop-filter: blur(4px);
+  }
+  body.show-fs #fs { display: block; }
+  body.hide-cursor, body.hide-cursor * { cursor: none !important; }
+</style>
+</head>
+<body
+  data-sucursal="<%= sucursal %>"
+  data-pantalla="<%= pantalla %>"
+  data-orientation="<%= orientation %>"
+  data-poll-seconds="<%= pollSeconds %>"
+  data-daily-reload-at="<%= dailyReloadAt %>">
+<iframe id="a" class="stage" title="carta"></iframe>
+<iframe id="b" class="stage hidden" title="carta-buffer"></iframe>
+<button id="fs" title="Pantalla completa"><span>⛶ Toca para pantalla completa</span></button>
+<div id="status"></div>
+<script src="/player.js"></script>
+</body>
+</html>

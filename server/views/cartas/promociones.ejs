@@ -1,0 +1,61 @@
+<%# promociones.ejs — carrusel de slides con fade; un solo slide = estático %>
+<%
+  // Marca del frame: isotipo elegible + "manta viva". Los isotipos blancos
+  // (02/04) van sin invert; los oscuros se invierten como el PNG original.
+  const ISO_IDS = ['02', '03', '04', 'mesa1'];
+  const iso = rotation.isotipo;
+  const markSrc = ISO_IDS.includes(iso)
+    ? `/assets/isotipos/manta-${iso}${rotation.mantaLive ? '-live' : ''}.svg`
+    : '/assets/manta-mark.png';
+  const markFilter = (iso === '02' || iso === '04') ? '' : 'filter: invert(1); ';
+  const legacyLive = !!(rotation.mantaLive && !ISO_IDS.includes(iso));
+%>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Manta Café — Promociones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#14120f}a{color:#986A4C}a:hover{color:#C08A5E}
+.stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#14120f}
+.frame{position:absolute;inset:0;width:1080px;height:1920px;overflow:hidden;background:#14120f;color:#F3EDE3;font-family:Archivo,system-ui,sans-serif;opacity:0;transition:opacity <%= rotation.transitionMs %>ms ease}
+.frame.active{opacity:1}
+<% if (rotation.textAnimation !== false) { %>
+/* Texto del slide entra escalonado hacia arriba cada vez que el frame se activa */
+.frame [data-zone="promo-text"] > div{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.frame.active [data-zone="promo-text"] > div{opacity:1;transform:none}
+.frame.active [data-zone="promo-text"] > div:nth-child(1){transition-delay:.2s}
+.frame.active [data-zone="promo-text"] > div:nth-child(2){transition-delay:.35s}
+.frame.active [data-zone="promo-text"] > div:nth-child(3){transition-delay:.5s}
+.frame.active [data-zone="promo-text"] > div:nth-child(4){transition-delay:.65s}
+.frame.active [data-zone="promo-text"] > div:nth-child(5){transition-delay:.8s}
+<% } %>
+<% if (legacyLive) { %>
+.fx-manta{animation:fxFlap 7s ease-in-out infinite;transform-origin:50% 42%}
+@keyframes fxFlap{0%,50%,100%{transform:scaleY(1) rotate(0deg)}58%{transform:scaleY(.88) rotate(-2deg)}66%{transform:scaleY(1.06) rotate(1.5deg)}74%{transform:scaleY(.95) rotate(-0.8deg)}82%{transform:scaleY(1.02) rotate(0.4deg)}}
+<% } %>
+</style>
+<%- overrides %>
+</head>
+<body>
+<div class="stage"><% slides.forEach((slide, index) => { %><%- include('../partials/promo-frame', { slide, index, markSrc, markFilter, legacyLive }) %><% }) %></div>
+<script>
+(() => {
+  const frames = document.querySelectorAll('.frame');
+  if (!frames.length) return;
+  frames[0].classList.add('active');
+  if (frames.length < 2) return;
+  let i = 0;
+  setInterval(() => {
+    frames[i].classList.remove('active');
+    i = (i + 1) % frames.length;
+    frames[i].classList.add('active');
+  }, <%= rotation.secondsPerSlide * 1000 %>);
+})();
+</script>
+</body>
+</html>

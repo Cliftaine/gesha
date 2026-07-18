@@ -1,0 +1,36 @@
+{
+  "alimentos": {
+    "zones": {}
+  },
+  "bebidas": {
+    "zones": {
+      "title": {
+        "hidden": false
+      },
+      "col-0": {
+        "hidden": false
+      },
+      "cat-espresso-bar": {
+        "hidden": false
+      },
+      "cat-otros": {
+        "hidden": false
+      },
+      "col-1": {
+        "hidden": false
+      },
+      "cat-especiales": {
+        "hidden": false
+      },
+      "cat-heladas": {
+        "hidden": true
+      },
+      "cat-frappes": {
+        "hidden": false
+      }
+    }
+  },
+  "promociones": {
+    "zones": {}
+  }
+}

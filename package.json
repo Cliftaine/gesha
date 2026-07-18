@@ -1,0 +1,21 @@
+{
+  "name": "gesha",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Despachador de cartas digitales — Manta Café",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "panel:dev": "npm --prefix panel run dev",
+    "panel:build": "npm --prefix panel run build",
+    "isotipos": "node scripts/build-isotipos.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
+  }
+}

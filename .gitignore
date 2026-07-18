@@ -1,0 +1,6 @@
+node_modules/
+panel/dist/
+public/uploads/*
+!public/uploads/.gitkeep
+.DS_Store
+*.tmp

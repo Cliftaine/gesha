@@ -1,0 +1,372 @@
+{
+  "id": "bebidas",
+  "template": "menu",
+  "title": "Bebidas",
+  "dense": true,
+  "sizes": [
+    {
+      "id": "CH",
+      "cup": "small"
+    },
+    {
+      "id": "G",
+      "cup": "large"
+    }
+  ],
+  "columns": [
+    [
+      "espresso-bar",
+      "otros",
+      "especiales"
+    ],
+    [
+      "heladas",
+      "frappes"
+    ]
+  ],
+  "categories": {
+    "espresso-bar": {
+      "title": "Espresso Bar",
+      "icon": "accent-hot",
+      "boxed": false,
+      "legendSizes": [
+        "CH",
+        "G"
+      ],
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Espresso (2 oz)",
+              "prices": {
+                "CH": 38
+              }
+            },
+            {
+              "name": "Americano",
+              "prices": {
+                "CH": 50,
+                "G": 63
+              }
+            },
+            {
+              "name": "Cortado",
+              "prices": {
+                "CH": 53,
+                "G": 65
+              }
+            },
+            {
+              "name": "Latte",
+              "prices": {
+                "CH": 62,
+                "G": 75
+              }
+            },
+            {
+              "name": "Capuccino",
+              "prices": {
+                "CH": 62,
+                "G": 75
+              }
+            },
+            {
+              "name": "Mocha",
+              "prices": {
+                "CH": 71,
+                "G": 83
+              }
+            },
+            {
+              "name": "Mocha Blanco",
+              "prices": {
+                "CH": 71,
+                "G": 83
+              }
+            },
+            {
+              "name": "Dirty Chai",
+              "prices": {
+                "CH": 71,
+                "G": 83
+              }
+            },
+            {
+              "name": "Capuccino Saborizado",
+              "prices": {
+                "CH": 71,
+                "G": 83
+              },
+              "flavors": "Vainilla  ·  Crema Irlandesa"
+            }
+          ]
+        }
+      ]
+    },
+    "otros": {
+      "title": "Otros",
+      "icon": "accent-leaf",
+      "boxed": false,
+      "legendSizes": [
+        "CH",
+        "G"
+      ],
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Chocolate Abuelita",
+              "prices": {
+                "CH": 37,
+                "G": 53
+              }
+            },
+            {
+              "name": "Taro Latte",
+              "prices": {
+                "CH": 61,
+                "G": 73
+              }
+            },
+            {
+              "name": "Matcha Latte",
+              "prices": {
+                "CH": 71,
+                "G": 83
+              }
+            },
+            {
+              "name": "Chai Latte",
+              "prices": {
+                "CH": 61,
+                "G": 73
+              }
+            },
+            {
+              "name": "Chai Manzana",
+              "prices": {
+                "CH": 61,
+                "G": 73
+              }
+            },
+            {
+              "name": "Infusión Gourmet",
+              "prices": {
+                "CH": 37,
+                "G": 53
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "especiales": {
+      "title": "Especiales",
+      "icon": "accent-star",
+      "boxed": true,
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Avellana Latte",
+              "price": 83,
+              "note": "Latte con crema de avellana (Nutella) · caliente o frío"
+            },
+            {
+              "name": "Kaoba",
+              "price": 83,
+              "note": "Chai, chocolate y espresso · caliente o frío"
+            },
+            {
+              "name": "Espresso Tonic",
+              "price": 73,
+              "note": "Cítrico y burbujeante · frío"
+            },
+            {
+              "name": "Matcha Raya",
+              "price": 90,
+              "note": "Matcha, leche de avena y miel de agave azul"
+            },
+            {
+              "name": "Strawberry Matcha",
+              "price": 90,
+              "note": "Matcha latte frío con jarabe de fresa en la base"
+            }
+          ]
+        }
+      ]
+    },
+    "heladas": {
+      "title": "Heladas",
+      "icon": "accent-cold",
+      "boxed": false,
+      "legendSizes": [
+        "G"
+      ],
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Americano Helado",
+              "price": 63
+            },
+            {
+              "name": "Capuccino Helado",
+              "price": 73
+            },
+            {
+              "name": "Caramel “Malcriado”",
+              "price": 73
+            },
+            {
+              "name": "Mocha",
+              "price": 73
+            },
+            {
+              "name": "Dirty Chai",
+              "price": 73
+            },
+            {
+              "name": "Ice Coffee Saborizado",
+              "price": 73,
+              "flavors": "Vainilla  ·  Crema Irlandesa  ·  Brown Sugar  ·  Vanilla Francesa (s/azúcar)  ·  Caramel (s/azúcar)"
+            }
+          ]
+        }
+      ]
+    },
+    "frappes": {
+      "title": "Frappes",
+      "icon": "accent-ice",
+      "boxed": false,
+      "legendSizes": [
+        "G"
+      ],
+      "groups": [
+        {
+          "label": "Café",
+          "items": [
+            {
+              "name": "Espresso Coffee",
+              "price": 63
+            },
+            {
+              "name": "Caramel Coffee",
+              "price": 73
+            },
+            {
+              "name": "Dirty Chocolate",
+              "price": 73,
+              "flavors": "Blanco  ·  Obscuro"
+            }
+          ]
+        },
+        {
+          "label": "Otros",
+          "items": [
+            {
+              "name": "Chocolate",
+              "price": 73,
+              "flavors": "Abuelita  ·  Blanco  ·  Obscuro"
+            },
+            {
+              "name": "Taro",
+              "price": 73
+            },
+            {
+              "name": "Cookies & Cream",
+              "price": 78
+            },
+            {
+              "name": "Taro-Oreo",
+              "price": 78
+            },
+            {
+              "name": "Chai",
+              "price": 73
+            },
+            {
+              "name": "Matcha",
+              "price": 73
+            }
+          ]
+        },
+        {
+          "label": "Frutales",
+          "items": [
+            {
+              "name": "Fresa Cream",
+              "price": 83
+            },
+            {
+              "name": "Mango Cream",
+              "price": 83
+            },
+            {
+              "name": "Mango-Limón",
+              "price": 83
+            },
+            {
+              "name": "Fresa-Limón",
+              "price": 83
+            },
+            {
+              "name": "Maracuyá",
+              "price": 83
+            }
+          ],
+          "note": "Disponibilidad por temporada"
+        }
+      ]
+    }
+  },
+  "featured": null,
+  "imageStrip": [
+    {
+      "id": "v2-p1",
+      "src": null,
+      "placeholder": "Foto producto"
+    },
+    {
+      "id": "v2-p2",
+      "src": null,
+      "placeholder": "Café en grano"
+    },
+    {
+      "id": "v2-p3",
+      "src": null,
+      "placeholder": "Foto producto"
+    }
+  ],
+  "extras": {
+    "title": "Extras",
+    "price": 13,
+    "unit": "c/u",
+    "items": [
+      {
+        "icon": "accent-plant",
+        "label": "Leche vegetal"
+      },
+      {
+        "icon": "accent-cream",
+        "label": "Crema batida"
+      },
+      {
+        "icon": "accent-tapioca",
+        "label": "Tapioca"
+      },
+      {
+        "icon": "accent-jelly",
+        "label": "Jellys"
+      }
+    ]
+  },
+  "mark": {
+    "isotipo": "mesa1",
+    "live": true
+  }
+}

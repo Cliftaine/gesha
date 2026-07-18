@@ -1,0 +1,345 @@
+{
+  "id": "alimentos",
+  "template": "menu",
+  "title": "Alimentos",
+  "dense": false,
+  "sizes": [],
+  "columns": [
+    [
+      "desayunos",
+      "tortas-chapatas"
+    ],
+    [
+      "antojitos",
+      "cat-mrp4fo16",
+      "entre-panes"
+    ]
+  ],
+  "categories": {
+    "desayunos": {
+      "title": "Desayunos",
+      "icon": "accent-egg",
+      "boxed": true,
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Huevos al Gusto",
+              "price": 66,
+              "note": "Mexicanos, divorciados, rancheros, con tocino o jamón…"
+            },
+            {
+              "name": "Omelette",
+              "price": 66,
+              "note": "Espinaca, jamón, champiñones, queso, tocino…"
+            },
+            {
+              "name": "Sincronizadas",
+              "qualifier": "3 pz",
+              "price": 45
+            },
+            {
+              "name": "Hot Cakes",
+              "qualifier": "3 pz",
+              "price": 66
+            },
+            {
+              "name": "Cereal",
+              "price": 39
+            },
+            {
+              "name": "Chilaquiles",
+              "qualifier": "Verdes o rojos",
+              "variants": [
+                {
+                  "name": "Solos",
+                  "price": 72
+                },
+                {
+                  "name": "Gratinados",
+                  "price": 82
+                },
+                {
+                  "name": "Con huevos",
+                  "price": 99
+                },
+                {
+                  "name": "Milanesa o asada",
+                  "price": 110
+                }
+              ]
+            },
+            {
+              "name": "Enchiladas",
+              "variants": [
+                {
+                  "name": "Rellenas de pollo",
+                  "price": 93
+                },
+                {
+                  "name": "Suizas",
+                  "price": 99
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "accent": true
+    },
+    "tortas-chapatas": {
+      "title": "Tortas & Chapatas",
+      "icon": "accent-sandwich",
+      "boxed": false,
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Tortas",
+              "variants": [
+                {
+                  "name": "Salchicha o jamón",
+                  "price": 53
+                },
+                {
+                  "name": "Huevo",
+                  "price": 58
+                },
+                {
+                  "name": "Chilaquiles",
+                  "price": 61
+                },
+                {
+                  "name": "Milanesa pollo / res",
+                  "price": 87
+                }
+              ]
+            },
+            {
+              "name": "Chapatas",
+              "variants": [
+                {
+                  "name": "Jamón con queso / Salchicha",
+                  "price": 61
+                },
+                {
+                  "name": "Huevo",
+                  "price": 68
+                },
+                {
+                  "name": "Milanesa pollo / res",
+                  "price": 92
+                },
+                {
+                  "name": "Pechuga asada",
+                  "price": 92
+                },
+                {
+                  "name": "Tinga de pollo",
+                  "price": 92
+                }
+              ]
+            },
+            {
+              "name": "Torta Pecadora",
+              "price": 87,
+              "note": "Res, chorizo, frijoles, salsa secreta y queso"
+            }
+          ]
+        }
+      ]
+    },
+    "antojitos": {
+      "title": "Antojitos Mexicanos",
+      "icon": "accent-taco",
+      "boxed": false,
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Sopes",
+              "variants": [
+                {
+                  "name": "Clásico",
+                  "price": 39
+                },
+                {
+                  "name": "Pollo o bistec",
+                  "price": 55
+                }
+              ]
+            },
+            {
+              "name": "Quesadillas",
+              "variants": [
+                {
+                  "name": "Frita",
+                  "price": 39
+                },
+                {
+                  "name": "De comal",
+                  "price": 39
+                },
+                {
+                  "name": "Combinada",
+                  "price": 48
+                }
+              ]
+            },
+            {
+              "name": "Gorditas",
+              "variants": [
+                {
+                  "name": "Chicharrón",
+                  "price": 39
+                },
+                {
+                  "name": "Con quesillo",
+                  "price": 48
+                }
+              ]
+            },
+            {
+              "name": "Tacos",
+              "qualifier": "3 pz",
+              "variants": [
+                {
+                  "name": "Dorados",
+                  "price": 84
+                },
+                {
+                  "name": "Bistec",
+                  "price": 110
+                },
+                {
+                  "name": "Campechanos",
+                  "price": 110
+                },
+                {
+                  "name": "Pechuga asada",
+                  "price": 110
+                }
+              ],
+              "note": "Pechuga asada: incluyen papas a la francesa"
+            }
+          ]
+        }
+      ]
+    },
+    "entre-panes": {
+      "title": "Sandwiches",
+      "icon": "accent-star",
+      "boxed": true,
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Club Sandwich",
+              "variants": [
+                {
+                  "name": "Clásico",
+                  "price": 92
+                },
+                {
+                  "name": "Integral",
+                  "price": 99
+                }
+              ],
+              "note": "Incluye papás a la francesa"
+            },
+            {
+              "name": "Hot Dogs",
+              "variants": [
+                {
+                  "name": "Clásico",
+                  "price": 33
+                },
+                {
+                  "name": "Big Dog",
+                  "price": 45
+                }
+              ]
+            },
+            {
+              "name": "Molletes",
+              "variants": [
+                {
+                  "name": "Clásicos",
+                  "price": 55
+                },
+                {
+                  "name": "Chorizo, tocino o jamón",
+                  "price": 72
+                }
+              ]
+            },
+            {
+              "name": "Cuernito Jamón c/queso",
+              "price": 50
+            },
+            {
+              "name": "Papas a la Francesa",
+              "price": 48
+            }
+          ]
+        }
+      ],
+      "accent": true
+    },
+    "cat-mrp4fo16": {
+      "title": "Smashed burguers",
+      "icon": "accent-burger",
+      "boxed": true,
+      "groups": [
+        {
+          "label": null,
+          "items": [
+            {
+              "name": "Americana",
+              "price": 0,
+              "note": "La clásica, con queso amarillo, lechuga, jitomate y pepinillos"
+            },
+            {
+              "name": "Tocino",
+              "price": 0,
+              "note": "Carne aplastada, acompañado de una mermalada de tocino con cebolla y queso philadelfia"
+            }
+          ]
+        }
+      ],
+      "accent": true
+    }
+  },
+  "featured": {
+    "title": "Comida del día",
+    "price": 110,
+    "label": "Incluye",
+    "includes": [
+      "Sopa o consomé",
+      "Arroz o pasta",
+      "Guisado",
+      "Guarnición",
+      "Postre",
+      "Agua"
+    ],
+    "footnote": "Para llevar: costo extra de $15",
+    "liveGuisado": false,
+    "enabled": true
+  },
+  "imageStrip": null,
+  "extras": null,
+  "mark": {
+    "isotipo": "03",
+    "live": true
+  },
+  "animations": {
+    "title": "typewriter",
+    "entrance": "fade-up",
+    "accentStyle": "shimmer",
+    "replaySeconds": 0
+  }
+}

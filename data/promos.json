@@ -1,0 +1,137 @@
+{
+  "promos": [
+    {
+      "id": "martes-2x1",
+      "enabled": true,
+      "kicker": "Solo los martes",
+      "headline": "2 × 1",
+      "headlineSize": 168,
+      "subtitle": "Martes de Cold Brew",
+      "description": "Todo el día. Trae a un amigo y compartan el frío.",
+      "footnote": "Válido únicamente en tienda",
+      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=2160&q=80&auto=format&fit=crop",
+      "rules": {
+        "days": [
+          "tue"
+        ],
+        "from": null,
+        "to": null,
+        "dateFrom": null,
+        "dateTo": null
+      },
+      "tags": [
+        "cold"
+      ],
+      "priority": 50,
+      "sucursales": null
+    },
+    {
+      "id": "combo-mananero",
+      "enabled": true,
+      "kicker": "De 7 a 11 am",
+      "headline": "$79",
+      "headlineSize": 168,
+      "subtitle": "Combo Mañanero",
+      "description": "Café americano o latte + concha del día.",
+      "footnote": "Empieza bien la mañana",
+      "image": "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=2160&q=80&auto=format&fit=crop",
+      "rules": {
+        "days": [],
+        "from": "07:00",
+        "to": "11:00",
+        "dateFrom": null,
+        "dateTo": null
+      },
+      "tags": [
+        "hot"
+      ],
+      "priority": 50,
+      "sucursales": null
+    },
+    {
+      "id": "hora-manta",
+      "enabled": true,
+      "kicker": "De 4 a 6 pm",
+      "headline": "−20%",
+      "headlineSize": 168,
+      "subtitle": "Hora Manta",
+      "description": "En todas las bebidas de especialidad de la casa.",
+      "footnote": "Pregunta por las opciones del día",
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=2160&q=80&auto=format&fit=crop",
+      "rules": {
+        "days": [],
+        "from": "16:00",
+        "to": "18:00",
+        "dateFrom": null,
+        "dateTo": null
+      },
+      "tags": [],
+      "priority": 50,
+      "sucursales": null
+    },
+    {
+      "id": "club-manta",
+      "enabled": true,
+      "kicker": "Club Manta",
+      "headline": "Va por la casa",
+      "headlineSize": 84,
+      "subtitle": "Tu 8ª bebida",
+      "description": "Acumula sellos en cada visita y disfruta la octava gratis.",
+      "footnote": "Pide tu tarjeta en barra",
+      "image": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=2160&q=80&auto=format&fit=crop",
+      "rules": {
+        "days": [],
+        "from": null,
+        "to": null,
+        "dateFrom": null,
+        "dateTo": null
+      },
+      "tags": [],
+      "priority": 20,
+      "sucursales": null
+    }
+  ],
+  "weather": {
+    "coldBelowC": 16,
+    "hotAboveC": 27,
+    "boost": 100
+  },
+  "dynamic": {
+    "desayunos": {
+      "enabled": true,
+      "from": "07:00",
+      "to": "11:30",
+      "priority": 90,
+      "kicker": "Horario estelar",
+      "subtitle": "Desayunos Manta",
+      "image": null
+    },
+    "comidaHoy": {
+      "enabled": true,
+      "from": "12:00",
+      "to": "17:00",
+      "priority": 95,
+      "kicker": "Comida del día",
+      "image": null
+    },
+    "comidaManana": {
+      "enabled": true,
+      "from": "17:00",
+      "to": "22:00",
+      "priority": 60,
+      "kicker": "Mañana en Manta",
+      "image": null
+    },
+    "promoDelDia": {
+      "enabled": true,
+      "priority": 80
+    }
+  },
+  "rotation": {
+    "secondsPerSlide": 12,
+    "transitionMs": 900,
+    "maxSlides": 6,
+    "isotipo": "02",
+    "mantaLive": true
+  }
+}

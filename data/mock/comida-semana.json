@@ -1,0 +1,51 @@
+{
+  "mon": {
+    "sopa": "Sopa de fideo",
+    "guisado": "Milanesa de pollo en salsa verde",
+    "guarnicion": "Frijoles refritos",
+    "postre": "Gelatina de rompope",
+    "promoDelDia": { "headline": "$99", "subtitle": "Lunes de Chilaquiles", "description": "Chilaquiles con huevo + café americano.", "tags": ["hot"] }
+  },
+  "tue": {
+    "sopa": "Consomé de pollo",
+    "guisado": "Tinga de pollo",
+    "guarnicion": "Arroz rojo",
+    "postre": "Flan napolitano",
+    "promoDelDia": { "headline": "2 × 1", "subtitle": "Martes de Cold Brew", "description": "Todo el día. Trae a un amigo y compartan el frío.", "tags": ["cold"] }
+  },
+  "wed": {
+    "sopa": "Crema de elote",
+    "guisado": "Albóndigas al chipotle",
+    "guarnicion": "Puré de papa",
+    "postre": "Arroz con leche",
+    "promoDelDia": { "headline": "−15%", "subtitle": "Miércoles de Matcha", "description": "En toda la línea de matcha, caliente o frío.", "tags": ["cold", "hot"] }
+  },
+  "thu": {
+    "sopa": "Sopa de tortilla",
+    "guisado": "Bistec a la mexicana",
+    "guarnicion": "Frijoles charros",
+    "postre": "Gelatina mosaico",
+    "promoDelDia": { "headline": "$79", "subtitle": "Jueves de Combo", "description": "Torta de jamón + bebida chica.", "tags": [] }
+  },
+  "fri": {
+    "sopa": "Crema de champiñones",
+    "guisado": "Pescado empapelado",
+    "guarnicion": "Arroz blanco",
+    "postre": "Pay de limón",
+    "promoDelDia": { "headline": "−20%", "subtitle": "Viernes de Frappes", "description": "En todos los frappes de la casa.", "tags": ["ice"] }
+  },
+  "sat": {
+    "sopa": "Pozole rojo (taza)",
+    "guisado": "Chiles rellenos",
+    "guarnicion": "Frijoles de la olla",
+    "postre": "Buñuelos",
+    "promoDelDia": { "headline": "$89", "subtitle": "Sábado Familiar", "description": "Hot cakes + chocolate abuelita.", "tags": ["hot"] }
+  },
+  "sun": {
+    "sopa": "Caldo de res",
+    "guisado": "Mole con pollo",
+    "guarnicion": "Arroz rojo",
+    "postre": "Nieve de garrafa",
+    "promoDelDia": { "headline": "2 × 1", "subtitle": "Domingo de Conchas", "description": "En concha con café, para cerrar la semana.", "tags": [] }
+  }
+}
