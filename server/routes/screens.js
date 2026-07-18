@@ -4,7 +4,16 @@ const express = require('express');
 const path = require('path');
 const store = require('../lib/store');
 const { resolveCarta, getScreen } = require('../lib/dispatch');
-const { renderCarta, CARTA_IDS } = require('../lib/render');
+const { renderCarta, cartaIds, canvasFor } = require('../lib/render');
+
+// Rotación de la pantalla en grados (0/90/180/270). Compat con el formato
+// viejo ('portrait'/'cw'/'ccw').
+function rotationFor(screen) {
+  if ([0, 90, 180, 270].includes(screen.rotation)) return screen.rotation;
+  if (screen.orientation === 'cw') return 90;
+  if (screen.orientation === 'ccw') return 270;
+  return 0;
+}
 
 const router = express.Router();
 
@@ -23,7 +32,7 @@ function nowFrom(req) {
 router.get('/carta/:cartaId', async (req, res, next) => {
   try {
     const { cartaId } = req.params;
-    if (!CARTA_IDS.includes(cartaId)) return res.status(404).send('Carta desconocida');
+    if (!cartaIds().includes(cartaId)) return res.status(404).send('Carta desconocida');
     const html = await renderCarta(cartaId, {
       now: nowFrom(req),
       sucursal: req.query.sucursal || null,
@@ -63,7 +72,8 @@ router.get('/api/resolve/:sucursal/:pantalla', (req, res) => {
   res.json({
     carta: resolved.carta,
     version: store.version(),
-    orientation: screen.orientation || 'portrait',
+    rotation: rotationFor(screen),
+    canvas: canvasFor(resolved.carta),
   });
 });
 
@@ -77,7 +87,8 @@ function pushClient(client) {
   const payload = {
     carta: resolved.carta,
     version: store.version(),
-    orientation: (screen && screen.orientation) || 'portrait',
+    rotation: screen ? rotationFor(screen) : 0,
+    canvas: canvasFor(resolved.carta),
   };
   client.res.write(`data: ${JSON.stringify(payload)}\n\n`);
   client.lastCarta = resolved.carta;
@@ -114,20 +125,58 @@ router.get('/events/:sucursal/:pantalla', (req, res) => {
   });
 });
 
+// ── Índice: GET / → directorio de pantallas ───────────────────────────────
+// Página simple para configurar TVs: entra a la raíz y toca tu pantalla.
+function indexPage() {
+  const cfg = store.get('config/dispatch.json');
+  const links = [];
+  for (const [sucId, suc] of Object.entries(cfg.sucursales)) {
+    for (const [panId, screen] of Object.entries(suc.pantallas)) {
+      links.push(
+        `<a href="/${sucId}/${panId}"><strong>${suc.name || sucId} · ${screen.name || panId}</strong><span>/${sucId}/${panId}</span></a>`
+      );
+    }
+  }
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Manta Café — Pantallas</title>
+<style>body{margin:0;background:#14120f;color:#F3EDE3;font:16px/1.5 system-ui,sans-serif;
+display:flex;flex-direction:column;align-items:center;padding:48px 24px}
+h1{font-weight:500;letter-spacing:.3em;text-transform:uppercase;font-size:18px;color:#986A4C}
+a{display:flex;flex-direction:column;gap:2px;width:min(460px,100%);margin:8px 0;padding:18px 22px;
+background:rgba(243,237,227,.06);border:1px solid rgba(243,237,227,.15);border-radius:12px;
+color:#F3EDE3;text-decoration:none}
+a:hover{background:rgba(243,237,227,.12)}
+a span{color:rgba(243,237,227,.5);font-size:13px}
+.panel{margin-top:28px;color:#986A4C}</style></head>
+<body><h1>Manta Café · Pantallas</h1>${links.join('')}
+<a class="panel" href="/panel"><strong>Panel de administración</strong><span>/panel</span></a>
+</body></html>`;
+}
+
+router.get('/', (req, res) => {
+  res.type('html').send(indexPage());
+});
+
 // ── Dispatcher: GET /:sucursal/:pantalla → shell del player ───────────────
 // Va al final para no capturar /carta, /api, /events, etc.
-router.get('/:sucursal/:pantalla', (req, res) => {
+router.get('/:sucursal/:pantalla', (req, res, next) => {
   const { sucursal, pantalla } = req.params;
   const screen = getScreen(sucursal, pantalla);
-  if (!screen) return res.status(404).send('Pantalla no encontrada');
+  if (!screen) return next(); // cae al 404 amigable con el directorio
   const settings = store.get('config/settings.json');
   res.render('player', {
     sucursal,
     pantalla,
-    orientation: screen.orientation || 'portrait',
+    rotation: rotationFor(screen),
     pollSeconds: settings.player.pollSeconds,
     dailyReloadAt: settings.player.dailyReloadAt,
   });
+});
+
+// ── 404 amigable: cualquier ruta desconocida muestra el directorio ────────
+router.use((req, res) => {
+  res.status(404).type('html').send(indexPage());
 });
 
 module.exports = router;

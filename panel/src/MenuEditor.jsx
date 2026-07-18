@@ -4,9 +4,9 @@ import IconPicker from './IconPicker.jsx';
 
 // Editor completo de menús: categorías (crear/mover/renombrar/iconos),
 // items (precio único / por tamaño / variantes en 1-2 columnas), banners
-// elegibles (Comida del día, Extras, fotos) y animaciones/acentos.
-export default function MenuEditor() {
-  const [menuId, setMenuId] = useState('alimentos');
+// elegibles (Comida del día, Extras, fotos), canvas y animaciones/acentos.
+// Recibe menuId del ContentEditor; onMeta avisa cambios de metadata (canvas).
+export default function MenuEditor({ menuId, onMeta }) {
   const [menu, setMenu] = useState(null);
   const [status, setStatus] = useState('');
   const [previewKey, setPreviewKey] = useState(0);
@@ -39,6 +39,7 @@ export default function MenuEditor() {
       await apiPut(`/menus/${menuId}`, data);
       setStatus('Guardado ✓');
       setPreviewKey((k) => k + 1);
+      onMeta?.();
       setTimeout(() => setStatus(''), 2000);
     } catch (e) {
       if (e instanceof ConflictError && confirm(e.message)) location.reload();
@@ -63,16 +64,22 @@ export default function MenuEditor() {
 
   return (
     <>
-      <h1>Menús y precios</h1>
       <p className="sub">
-        Edición completa: categorías, items, banners y animaciones. Los cambios se guardan solos.
+        Los cambios se guardan solos y las pantallas se actualizan al instante.
         {' '}<span className={status.includes('✓') ? 'status-saved' : 'status-error'}>{status}</span>
       </p>
-      <div className="row" style={{ marginBottom: 16 }}>
-        <select value={menuId} onChange={(e) => setMenuId(e.target.value)}>
-          <option value="alimentos">Alimentos</option>
-          <option value="bebidas">Bebidas</option>
-        </select>
+      <div className="card">
+        <h2>Canvas</h2>
+        <div className="row">
+          <select value={menu.canvas || 'vertical'}
+            onChange={(e) => update((m) => { m.canvas = e.target.value; })}>
+            <option value="vertical">Vertical (1080×1920)</option>
+            <option value="horizontal">Horizontal (1920×1080)</option>
+          </select>
+          <span style={{ color: 'var(--muted)', fontSize: 12 }}>
+            La rotación física de la TV se configura por pantalla en "Configuración de pantallas".
+          </span>
+        </div>
       </div>
       <div className="row" style={{ alignItems: 'flex-start' }}>
         <div className="grow">
@@ -137,9 +144,22 @@ export default function MenuEditor() {
           <BannersCard menu={menu} update={update} />
         </div>
         <div className="preview-pane">
-          <div className="preview-box">
-            <iframe key={previewKey} src={`/carta/${menuId}`} title="preview" onLoad={checkOverlap} />
-          </div>
+          {(() => {
+            const cw = menu.canvas === 'horizontal' ? 1920 : 1080;
+            const ch = menu.canvas === 'horizontal' ? 1080 : 1920;
+            const s = 270 / cw;
+            return (
+              <div className="preview-box" style={{ width: 270, height: Math.round(ch * s) }}>
+                <iframe
+                  key={previewKey}
+                  src={`/carta/${menuId}`}
+                  title="preview"
+                  onLoad={checkOverlap}
+                  style={{ width: cw, height: ch, transform: `scale(${s})` }}
+                />
+              </div>
+            );
+          })()}
           <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>Vista previa en vivo</p>
           {overlap && (
             <p className="status-error" style={{ textAlign: 'center', fontSize: 12 }}>

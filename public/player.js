@@ -11,30 +11,40 @@
   const frames = [document.getElementById('a'), document.getElementById('b')];
   let active = 0;
   let current = { carta: null, version: null };
-  let orientation = body.dataset.orientation || 'portrait';
+  let rotation = Number(body.dataset.rotation) || 0; // 0 | 90 | 180 | 270
+  let canvas = { w: 1080, h: 1920 }; // dimensiones de la carta (llega en resolve/SSE)
   const status = document.getElementById('status');
 
-  // ── Centrado + scale-to-fit con orientación ─────────────────────────────
-  // El canvas siempre es 1080×1920 vertical; en TVs montadas de lado
-  // ('cw' = girada 90° horario, 'ccw' = antihorario) rotamos el canvas para
-  // llenar la pantalla landscape.
+  // ── Centrado + scale-to-fit con rotación y canvas dinámico ──────────────
+  // La carta puede ser vertical (1080×1920) u horizontal (1920×1080), y la
+  // pantalla puede estar montada girada: rotamos el canvas 0/90/180/270°
+  // y escalamos su huella al display.
   function fit() {
-    const rotated = orientation === 'cw' || orientation === 'ccw';
-    const scale = rotated
-      ? Math.min(innerWidth / 1920, innerHeight / 1080)
-      : Math.min(innerWidth / 1080, innerHeight / 1920);
-    const rot = orientation === 'cw' ? ' rotate(90deg)' : orientation === 'ccw' ? ' rotate(-90deg)' : '';
+    const swap = rotation === 90 || rotation === 270;
+    const fw = swap ? canvas.h : canvas.w; // huella en pantalla
+    const fh = swap ? canvas.w : canvas.h;
+    const scale = Math.min(innerWidth / fw, innerHeight / fh);
+    const rot = rotation ? ` rotate(${rotation}deg)` : '';
     for (const f of frames) {
+      f.style.width = canvas.w + 'px';
+      f.style.height = canvas.h + 'px';
       f.style.transform = `translate(-50%, -50%)${rot} scale(${scale})`;
     }
   }
   addEventListener('resize', fit);
   fit();
 
-  function setOrientation(next) {
-    if (!next || next === orientation) return;
-    orientation = next;
-    fit();
+  function applyView(rot, cv) {
+    let changed = false;
+    if ([0, 90, 180, 270].includes(rot) && rot !== rotation) {
+      rotation = rot;
+      changed = true;
+    }
+    if (cv && cv.w && (cv.w !== canvas.w || cv.h !== canvas.h)) {
+      canvas = cv;
+      changed = true;
+    }
+    if (changed) fit();
   }
 
   // ── Swap con doble buffer ────────────────────────────────────────────────
@@ -57,8 +67,8 @@
     try {
       const res = await fetch(`/api/resolve/${SUCURSAL}/${PANTALLA}`);
       if (!res.ok) return;
-      const { carta, version, orientation: orient } = await res.json();
-      setOrientation(orient);
+      const { carta, version, rotation: rot, canvas: cv } = await res.json();
+      applyView(rot, cv);
       show(carta, version);
     } catch { /* red caída: reintenta al siguiente tick */ }
   }
@@ -68,8 +78,8 @@
     const es = new EventSource(`/events/${SUCURSAL}/${PANTALLA}`);
     es.onmessage = (e) => {
       try {
-        const { carta, version, orientation: orient } = JSON.parse(e.data);
-        setOrientation(orient);
+        const { carta, version, rotation: rot, canvas: cv } = JSON.parse(e.data);
+        applyView(rot, cv);
         show(carta, version);
       } catch { /* payload malformado: ignorar */ }
     };

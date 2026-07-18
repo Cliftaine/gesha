@@ -7,8 +7,31 @@ const { getWeather } = require('./weather');
 const { getComida } = require('./comida');
 const { selectSlides } = require('./promo-engine');
 
+const fs = require('fs');
 const VIEWS = path.join(__dirname, '..', 'views');
-const CARTA_IDS = ['alimentos', 'bebidas', 'promociones'];
+const MENUS_DIR = path.join(__dirname, '..', '..', 'data', 'menus');
+
+// Los menús son dinámicos: cada data/menus/*.json es una carta.
+function menuIds() {
+  return fs
+    .readdirSync(MENUS_DIR)
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => f.slice(0, -5))
+    .sort();
+}
+
+function cartaIds() {
+  return [...menuIds(), 'promociones'];
+}
+
+// Dimensiones del canvas de una carta (los menús pueden ser horizontales).
+function canvasFor(cartaId) {
+  if (cartaId !== 'promociones') {
+    const menu = require('./store').getSafe(`data/menus/${cartaId}.json`);
+    if (menu && menu.canvas === 'horizontal') return { w: 1920, h: 1080 };
+  }
+  return { w: 1080, h: 1920 };
+}
 
 // layouts.json → bloque <style> con los deltas de zonas del editor visual.
 // Sin overrides ⇒ string vacío ⇒ render pixel-idéntico al baseline.
@@ -60,4 +83,4 @@ async function renderCarta(cartaId, { now = new Date(), sucursal = null, tempOve
   });
 }
 
-module.exports = { renderCarta, CARTA_IDS };
+module.exports = { renderCarta, menuIds, cartaIds, canvasFor };

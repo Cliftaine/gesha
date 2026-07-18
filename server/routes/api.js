@@ -8,12 +8,10 @@ const store = require('../lib/store');
 const { getWeather } = require('../lib/weather');
 const { getComida } = require('../lib/comida');
 const { selectSlides } = require('../lib/promo-engine');
-const { CARTA_IDS } = require('../lib/render');
+const { menuIds, cartaIds } = require('../lib/render');
 
 const router = express.Router();
 router.use(express.json({ limit: '2mb' }));
-
-const MENU_IDS = ['alimentos', 'bebidas'];
 
 // GET devuelve { version, data }; el PUT correspondiente exige If-Match.
 function jsonResource(relPathFor, validate = null) {
@@ -47,9 +45,57 @@ router.get('/config/settings', settingsRes.get);
 router.put('/config/settings', settingsRes.put);
 
 function checkMenuId(req, res, next) {
-  if (!MENU_IDS.includes(req.params.id)) return res.status(404).json({ error: 'Menú desconocido' });
+  if (!menuIds().includes(req.params.id)) return res.status(404).json({ error: 'Menú desconocido' });
   next();
 }
+
+// Lista de menús (cartas editables) — el panel la usa para navegar y asignar.
+router.get('/menus', (req, res) => {
+  const list = menuIds().map((id) => {
+    const m = store.getSafe(`data/menus/${id}.json`) || {};
+    return { id, title: m.title || id, canvas: m.canvas || 'vertical', dense: !!m.dense };
+  });
+  res.json({ version: store.version(), menus: list });
+});
+
+// Crear un menú nuevo (scaffold vacío listo para el editor).
+router.post('/menus', (req, res) => {
+  const title = (req.body?.title || '').trim();
+  if (!title) return res.status(400).json({ error: 'Falta "title"' });
+  const id = (req.body?.id || title)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  if (!id) return res.status(400).json({ error: 'Id inválido' });
+  if (id === 'promociones' || menuIds().includes(id)) {
+    return res.status(409).json({ error: `Ya existe una carta "${id}"` });
+  }
+  const scaffold = {
+    id,
+    template: 'menu',
+    title,
+    dense: false,
+    canvas: req.body?.canvas === 'horizontal' ? 'horizontal' : 'vertical',
+    sizes: [],
+    columns: [[], []],
+    categories: {},
+    featured: null,
+    imageStrip: null,
+    extras: null,
+  };
+  const version = store.put(`data/menus/${id}.json`, scaffold);
+  res.json({ ok: true, id, version });
+});
+
+// Eliminar un menú (el panel confirma antes; las pantallas que lo usaban
+// caen a su carta default en el siguiente resolve).
+router.delete('/menus/:id', checkMenuId, (req, res) => {
+  const version = store.remove(`data/menus/${req.params.id}.json`);
+  res.json({ ok: true, version });
+});
+
 const menuRes = jsonResource((req) => `data/menus/${req.params.id}.json`, (req) =>
   !req.body?.categories ? 'el menú debe tener "categories"' : null
 );
@@ -63,7 +109,7 @@ router.get('/promos', promosRes.get);
 router.put('/promos', promosRes.put);
 
 function checkCartaId(req, res, next) {
-  if (!CARTA_IDS.includes(req.params.cartaId)) return res.status(404).json({ error: 'Carta desconocida' });
+  if (!cartaIds().includes(req.params.cartaId)) return res.status(404).json({ error: 'Carta desconocida' });
   next();
 }
 router.get('/layouts/:cartaId', checkCartaId, (req, res) => {

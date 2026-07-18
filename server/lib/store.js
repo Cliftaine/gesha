@@ -49,10 +49,20 @@ function put(relPath, obj) {
   return version;
 }
 
+function remove(relPath) {
+  const abs = absPath(relPath);
+  if (fs.existsSync(abs)) fs.unlinkSync(abs);
+  cache.delete(relPath);
+  version++;
+  emitter.emit('change', relPath);
+  return version;
+}
+
 module.exports = {
   get,
   getSafe,
   put,
+  remove,
   version: () => version,
   onChange: (fn) => emitter.on('change', fn),
   offChange: (fn) => emitter.off('change', fn),

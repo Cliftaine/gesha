@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import ScheduleEditor from './ScheduleEditor.jsx';
-import MenuEditor from './MenuEditor.jsx';
-import PromoEditor from './PromoEditor.jsx';
-import LayoutEditor from './LayoutEditor.jsx';
-import { apiGet } from './api.js';
+import ScreenConfig from './ScreenConfig.jsx';
+import ContentEditor from './ContentEditor.jsx';
 
 const ROUTES = [
-  ['#/horarios', 'Horarios'],
-  ['#/menus', 'Menús y precios'],
-  ['#/promos', 'Promociones'],
-  ['#/layout', 'Editor visual'],
+  ['#/pantallas', 'Configuración de pantallas'],
+  ['#/contenido', 'Contenido'],
 ];
 
+// Hashes viejos → nueva estructura.
+const LEGACY = { horarios: 'pantallas', menus: 'contenido', promos: 'contenido', layout: 'contenido' };
+
 export default function App() {
-  const [hash, setHash] = useState(location.hash || '#/horarios');
+  const [hash, setHash] = useState(location.hash || '#/pantallas');
   const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    const onHash = () => setHash(location.hash || '#/horarios');
+    const onHash = () => setHash(location.hash || '#/pantallas');
     addEventListener('hashchange', onHash);
     return () => removeEventListener('hashchange', onHash);
   }, []);
@@ -29,14 +27,15 @@ export default function App() {
       .catch(() => {});
   }, []);
 
-  const route = hash.split('/')[1] || 'horarios';
+  let route = hash.split('/')[1] || 'pantallas';
+  if (LEGACY[route]) route = LEGACY[route];
 
   return (
     <>
       <nav className="sidebar">
         <div className="brand">Manta Café</div>
         {ROUTES.map(([href, label]) => (
-          <a key={href} href={href} className={hash.startsWith(href) ? 'active' : ''}>
+          <a key={href} href={href} className={route === href.split('/')[1] ? 'active' : ''}>
             {label}
           </a>
         ))}
@@ -47,10 +46,8 @@ export default function App() {
         </div>
       </nav>
       <main className="main">
-        {route === 'horarios' && <ScheduleEditor />}
-        {route === 'menus' && <MenuEditor />}
-        {route === 'promos' && <PromoEditor />}
-        {route === 'layout' && <LayoutEditor />}
+        {route === 'pantallas' && <ScreenConfig />}
+        {route === 'contenido' && <ContentEditor />}
       </main>
     </>
   );

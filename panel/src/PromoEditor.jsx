@@ -51,7 +51,6 @@ export default function PromoEditor() {
 
   return (
     <>
-      <h1>Promociones</h1>
       <p className="sub">
         La pantalla de promociones rota entre los slides activos según hora, día y clima.
         {' '}<span className={status.includes('✓') ? 'status-saved' : 'status-error'}>{status}</span>

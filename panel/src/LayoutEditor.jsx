@@ -2,15 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import interact from 'interactjs';
 import { apiGet, apiPut, ConflictError } from './api.js';
 
-const SCALE = 0.42;
-const CARTAS = ['alimentos', 'bebidas', 'promociones'];
-
 // Editor visual: carga la carta real en un iframe escalado, lee las zonas
 // data-zone del documento y dibuja cajas overlay arrastrables/redimensionables.
 // Los deltas (dx/dy/w/h) se guardan en layouts.json y el server los inyecta
 // como <style> al renderizar — sin overrides el render es pixel-idéntico.
-export default function LayoutEditor() {
-  const [cartaId, setCartaId] = useState('alimentos');
+// Recibe cartaId y canvas {w,h} del ContentEditor (soporta horizontal).
+export default function LayoutEditor({ cartaId, canvas = { w: 1080, h: 1920 } }) {
+  // Escala para que el canvas quepa en un área de trabajo de ~460×810.
+  const SCALE = Math.min(460 / canvas.w, 810 / canvas.h);
   const [layout, setLayout] = useState({ zones: {} });
   const [zones, setZones] = useState([]); // [{name, rect}] rects base (sin overrides) en px de carta
   const [status, setStatus] = useState('');
@@ -93,33 +92,31 @@ export default function LayoutEditor() {
 
   return (
     <>
-      <h1>Editor visual</h1>
       <p className="sub">
         Arrastra las zonas para moverlas; usa las esquinas para redimensionar. Los cambios son deltas sobre el diseño original.
         {' '}<span className={status.includes('✓') ? 'status-saved' : 'status-error'}>{status}</span>
       </p>
       <div className="row" style={{ marginBottom: 14 }}>
-        <select value={cartaId} onChange={(e) => setCartaId(e.target.value)}>
-          {CARTAS.map((c) => <option key={c}>{c}</option>)}
-        </select>
         <button className="ghost" onClick={() => setIframeKey((k) => k + 1)}>Recargar vista</button>
         <button className="danger" onClick={resetAll}>Restablecer todo</button>
         <TemplateSwitcher cartaId={cartaId} onSwitched={() => setIframeKey((k) => k + 1)} setStatus={setStatus} />
       </div>
       <div className="row" style={{ alignItems: 'flex-start' }}>
-        <div className="layout-wrap">
+        <div className="layout-wrap" style={{ width: canvas.w * SCALE, height: canvas.h * SCALE }}>
           <iframe
             key={iframeKey}
             ref={iframeRef}
             src={`/carta/${cartaId}?edit=1`}
             title="layout"
             onLoad={onIframeLoad}
+            style={{ width: canvas.w, height: canvas.h, transform: `scale(${SCALE})` }}
           />
           <div className="zone-overlay">
             {zones.map((z) => (
               <ZoneBox
                 key={z.name + iframeKey}
                 zone={z}
+                scale={SCALE}
                 override={layout.zones[z.name] || {}}
                 selected={selected === z.name}
                 onSelect={() => setSelected(z.name)}
@@ -189,7 +186,7 @@ function TemplateSwitcher({ cartaId, onSwitched, setStatus }) {
   );
 }
 
-function ZoneBox({ zone, override, selected, onSelect, onCommit }) {
+function ZoneBox({ zone, scale: SCALE, override, selected, onSelect, onCommit }) {
   const ref = useRef(null);
   // Posición visual = rect medido en px de carta × SCALE. El rect medido ya
   // incluye el delta guardado (el server inyectó los overrides), así que la
