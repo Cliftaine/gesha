@@ -98,8 +98,23 @@ curl 'localhost:3000/api/preview/promos?at=2026-07-14T09:00&temp=10'
 open http://localhost:3000/diff/alimentos
 ```
 
-## Deploy
+## Deploy — servicio del sistema
 
-Un proceso Node por tienda (mini-PC) o un VPS para todas. Con pm2:
-`pm2 start server/index.js --name gesha`. Datos = archivos JSON (escritura
-atómica); respaldar `config/` y `data/`.
+Un proceso Node por tienda (mini-PC) o un VPS para todas. El Makefile instala
+el proyecto como servicio: **arranca con el servidor y se reinicia solo si se
+cae**, detectando el sistema operativo.
+
+```bash
+make setup             # primera vez: deps + build del panel + isotipos
+make service-install   # Linux → systemd (sudo) · macOS → launchd (usuario)
+make service-status    # estado + ping HTTP
+make service-logs      # logs en vivo (journalctl / tail)
+make service-restart   # reinicio manual
+make service-uninstall # quitar el servicio
+```
+
+Las plantillas viven en `deploy/` (`gesha.service.tpl`, `com.mantacafe.gesha.plist.tpl`)
+y `make service-install` sustituye ruta del proyecto, binario de node y usuario
+automáticamente. En Linux queda habilitado con el boot (`multi-user.target`);
+en macOS arranca al iniciar sesión (`RunAtLoad` + `KeepAlive`, logs en `logs/`).
+Datos = archivos JSON (escritura atómica); respaldar `config/` y `data/`.
