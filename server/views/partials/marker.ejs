@@ -1,0 +1,15 @@
+<%#
+  Marcador — bloque intermedio entre categorías dentro de una columna.
+  kind: 'titulo' (encabezado de sección), 'divisor' (línea con icono),
+  'nota' (recuadro con texto). Usa los mismos literales del diseño para que el
+  tema (theme.js) los recoloree igual que al resto de la carta.
+%>
+<%
+  const mkClasses = [];
+  if (typeof fxDelay === 'number') mkClasses.push('fx-in');
+  if (marker.accent) mkClasses.push('fx-accent');
+  const mkAttrs = (mkClasses.length ? ` class="${mkClasses.join(' ')}"` : '');
+  const mkDelay = typeof fxDelay === 'number' ? ` --fx-delay: ${fxDelay}s;` : '';
+  const kind = marker.kind || 'titulo';
+%>
+<% if (kind === 'divisor') { %><div data-zone="mk-<%= markerId %>"<%- mkAttrs %> style="display: flex; align-items: center; gap: 14px; margin: 4px 0px 26px;<%- mkDelay %>"><span style="flex: 1 1 0%; height: 1px; background: rgba(122, 90, 60, 0.28);"></span><% if (marker.icon) { %><img src="<%= iconSrc(marker.icon) %>" alt="" style="width: 44px; height: 44px; display: block;"><% } %><% if (marker.title) { %><span style="font-family: Archivo, system-ui, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgb(126, 116, 104);"><%= marker.title %></span><% } %><span style="flex: 1 1 0%; height: 1px; background: rgba(122, 90, 60, 0.28);"></span></div><% } else if (kind === 'nota') { %><div data-zone="mk-<%= markerId %>"<%- mkAttrs %> style="display: flex; align-items: center; gap: 16px; margin-bottom: 26px; background: rgba(122, 90, 60, 0.07); border: 1px solid rgba(122, 90, 60, 0.28); border-radius: 14px; padding: 14px 22px;<%- mkDelay %>"><% if (marker.icon) { %><img src="<%= iconSrc(marker.icon) %>" alt="" style="width: 52px; height: 52px; flex: 0 0 auto; display: block;"><% } %><div style="min-width: 0px;"><% if (marker.title) { %><div style="font-family: Archivo, system-ui, sans-serif; font-size: 17px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: rgb(42, 38, 32);"><%= marker.title %></div><% } %><% if (marker.text) { %><div style="font-family: &quot;Cormorant Garamond&quot;, Georgia, serif; font-style: italic; font-size: 23px; line-height: 1.2; color: rgb(122, 90, 60);"><%= marker.text %></div><% } %></div></div><% } else { %><div data-zone="mk-<%= markerId %>"<%- mkAttrs %> style="text-align: center; margin: 2px 0px 24px;<%- mkDelay %>"><% if (marker.icon) { %><img src="<%= iconSrc(marker.icon) %>" alt="" style="width: 60px; height: 60px; display: block; margin: 0px auto 4px;"><% } %><div style="font-family: &quot;Cormorant Garamond&quot;, Georgia, serif; font-weight: 600; font-size: 46px; line-height: 1; color: rgb(42, 38, 32); letter-spacing: -0.01em;"><%= marker.title %></div><% if (marker.text) { %><div style="font-family: &quot;Cormorant Garamond&quot;, Georgia, serif; font-style: italic; font-size: 22px; color: rgb(126, 116, 104); margin-top: 4px;"><%= marker.text %></div><% } %><div style="width: 64px; height: 2px; background: rgb(154, 122, 85); opacity: 0.5; margin: 12px auto 0px;"></div></div><% } %>

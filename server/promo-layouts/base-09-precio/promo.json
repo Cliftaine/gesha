@@ -1,0 +1,14 @@
+{
+  "name": "09 · Precio protagonista",
+  "description": "Fondo oscuro, precio enorme arriba y la foto en un arco abajo.",
+  "labels": {
+    "foto": "Imagen",
+    "titulo": "Título",
+    "precio": "Precio",
+    "slogan": "Slogan / promocional",
+    "contiene": "Lo que contiene (uno por línea)",
+    "tyc": "Términos y condiciones",
+    "logo": "Logo",
+    "logo_pos": "Posición del logo"
+  }
+}

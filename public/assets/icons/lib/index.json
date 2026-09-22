@@ -1,0 +1,310 @@
+[
+  {
+    "id": "coffee",
+    "label": "Café"
+  },
+  {
+    "id": "cup-soda",
+    "label": "Bebida fría"
+  },
+  {
+    "id": "glass-water",
+    "label": "Agua"
+  },
+  {
+    "id": "milk",
+    "label": "Leche"
+  },
+  {
+    "id": "wine",
+    "label": "Vino"
+  },
+  {
+    "id": "bottle-wine",
+    "label": "Botella"
+  },
+  {
+    "id": "beer",
+    "label": "Cerveza"
+  },
+  {
+    "id": "martini",
+    "label": "Coctel"
+  },
+  {
+    "id": "croissant",
+    "label": "Pan dulce"
+  },
+  {
+    "id": "cake",
+    "label": "Pastel"
+  },
+  {
+    "id": "cake-slice",
+    "label": "Rebanada"
+  },
+  {
+    "id": "dessert",
+    "label": "Postre"
+  },
+  {
+    "id": "donut",
+    "label": "Dona"
+  },
+  {
+    "id": "cookie",
+    "label": "Galleta"
+  },
+  {
+    "id": "candy",
+    "label": "Dulce"
+  },
+  {
+    "id": "lollipop",
+    "label": "Paleta"
+  },
+  {
+    "id": "popsicle",
+    "label": "Paleta helada"
+  },
+  {
+    "id": "ice-cream-cone",
+    "label": "Helado"
+  },
+  {
+    "id": "ice-cream-bowl",
+    "label": "Nieve"
+  },
+  {
+    "id": "pizza",
+    "label": "Pizza"
+  },
+  {
+    "id": "hamburger",
+    "label": "Hamburguesa"
+  },
+  {
+    "id": "sandwich",
+    "label": "Sándwich"
+  },
+  {
+    "id": "soup",
+    "label": "Sopa"
+  },
+  {
+    "id": "salad",
+    "label": "Ensalada"
+  },
+  {
+    "id": "egg-fried",
+    "label": "Huevo"
+  },
+  {
+    "id": "egg",
+    "label": "Huevo entero"
+  },
+  {
+    "id": "drumstick",
+    "label": "Pollo"
+  },
+  {
+    "id": "beef",
+    "label": "Carne"
+  },
+  {
+    "id": "ham",
+    "label": "Jamón"
+  },
+  {
+    "id": "fish",
+    "label": "Pescado"
+  },
+  {
+    "id": "shrimp",
+    "label": "Mariscos"
+  },
+  {
+    "id": "popcorn",
+    "label": "Botana"
+  },
+  {
+    "id": "wheat",
+    "label": "Trigo"
+  },
+  {
+    "id": "bean",
+    "label": "Grano"
+  },
+  {
+    "id": "nut",
+    "label": "Nuez"
+  },
+  {
+    "id": "apple",
+    "label": "Manzana"
+  },
+  {
+    "id": "banana",
+    "label": "Plátano"
+  },
+  {
+    "id": "cherry",
+    "label": "Cereza"
+  },
+  {
+    "id": "citrus",
+    "label": "Cítrico"
+  },
+  {
+    "id": "grape",
+    "label": "Uva"
+  },
+  {
+    "id": "carrot",
+    "label": "Zanahoria"
+  },
+  {
+    "id": "leafy-green",
+    "label": "Verde"
+  },
+  {
+    "id": "leaf",
+    "label": "Hoja"
+  },
+  {
+    "id": "sprout",
+    "label": "Brote"
+  },
+  {
+    "id": "vegan",
+    "label": "Vegano"
+  },
+  {
+    "id": "utensils",
+    "label": "Cubiertos"
+  },
+  {
+    "id": "utensils-crossed",
+    "label": "Cubiertos cruzados"
+  },
+  {
+    "id": "chef-hat",
+    "label": "Chef"
+  },
+  {
+    "id": "cooking-pot",
+    "label": "Olla"
+  },
+  {
+    "id": "hand-platter",
+    "label": "Servicio"
+  },
+  {
+    "id": "concierge-bell",
+    "label": "Campana"
+  },
+  {
+    "id": "flame",
+    "label": "Picante / caliente"
+  },
+  {
+    "id": "snowflake",
+    "label": "Frío"
+  },
+  {
+    "id": "sun",
+    "label": "Día"
+  },
+  {
+    "id": "moon",
+    "label": "Noche"
+  },
+  {
+    "id": "clock",
+    "label": "Horario"
+  },
+  {
+    "id": "star",
+    "label": "Estrella"
+  },
+  {
+    "id": "sparkles",
+    "label": "Destacado"
+  },
+  {
+    "id": "heart",
+    "label": "Favorito"
+  },
+  {
+    "id": "crown",
+    "label": "Premium"
+  },
+  {
+    "id": "award",
+    "label": "Premio"
+  },
+  {
+    "id": "thumbs-up",
+    "label": "Recomendado"
+  },
+  {
+    "id": "percent",
+    "label": "Descuento"
+  },
+  {
+    "id": "tag",
+    "label": "Oferta"
+  },
+  {
+    "id": "gift",
+    "label": "Regalo"
+  },
+  {
+    "id": "party-popper",
+    "label": "Fiesta"
+  },
+  {
+    "id": "music",
+    "label": "Música"
+  },
+  {
+    "id": "shopping-bag",
+    "label": "Para llevar"
+  },
+  {
+    "id": "truck",
+    "label": "Entrega"
+  },
+  {
+    "id": "bike",
+    "label": "Reparto"
+  },
+  {
+    "id": "wifi",
+    "label": "WiFi"
+  },
+  {
+    "id": "dog",
+    "label": "Pet friendly"
+  },
+  {
+    "id": "baby",
+    "label": "Niños"
+  },
+  {
+    "id": "map-pin",
+    "label": "Ubicación"
+  },
+  {
+    "id": "phone",
+    "label": "Teléfono"
+  },
+  {
+    "id": "credit-card",
+    "label": "Tarjeta"
+  },
+  {
+    "id": "banknote",
+    "label": "Efectivo"
+  }
+]

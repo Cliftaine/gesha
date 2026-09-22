@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  10 · Revista — diseño de promoción incluido en Gesha (1080×1920).
+  Editorial claro: foto con margen, título serif enorme y lista a dos columnas.
+  Todos los diseños "base-…" comparten los mismos campos, así que una promo
+  puede cambiar de diseño sin perder lo capturado. Copia esta carpeta como
+  punto de partida para tu propia plantilla (.zip con index.html + style.css).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>10 · Revista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<main class="slide entra" data-logo="{{opt:logo_pos|abajo-derecha,arriba-izquierda,arriba-centro,arriba-derecha,abajo-izquierda,abajo-centro,oculto}}">
+  <img class="foto" src="{{img:foto|https://images.unsplash.com/photo-1547573854-74d2a71d0826?w=1400&q=80&auto=format&fit=crop}}" alt="" onerror="this.style.display='none'"/>
+  <div class="velo"></div>
+  <img class="logo" src="{{img:logo|/assets/isotipos/manta-mesa1.svg}}" alt="" onerror="this.style.display='none'"/>
+  <section class="texto">
+    <p class="slogan">{{slogan|Temporada}}</p>
+    <h1 class="titulo">{{titulo|Sabores de otoño}}</h1>
+    <div class="precio">{{precio|$125}}</div>
+    <ul class="contiene">{{list:contiene|Sopa de calabaza;Chapata de pavo;Pay de manzana;Chai latte}}</ul>
+  </section>
+  <p class="tyc">{{tyc|Disponible del 1 de octubre al 30 de noviembre.}}</p>
+</main>
+<script>
+  // El carrusel avisa cuando este slide entra: se reinicia la animación.
+  addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'gesha:slide-active') return;
+    const s = document.querySelector('.slide');
+    s.classList.remove('entra');
+    void s.offsetWidth;
+    s.classList.add('entra');
+  });
+</script>
+</body>
+</html>

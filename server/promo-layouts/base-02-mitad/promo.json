@@ -1,0 +1,14 @@
+{
+  "name": "02 · Mitad y sello",
+  "description": "Foto arriba, panel crema abajo y el precio en un sello redondo.",
+  "labels": {
+    "foto": "Imagen",
+    "titulo": "Título",
+    "precio": "Precio",
+    "slogan": "Slogan / promocional",
+    "contiene": "Lo que contiene (uno por línea)",
+    "tyc": "Términos y condiciones",
+    "logo": "Logo",
+    "logo_pos": "Posición del logo"
+  }
+}

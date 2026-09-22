@@ -106,7 +106,7 @@ export default function LayoutEditor({ cartaId, canvas = { w: 1080, h: 1920 } })
           <iframe
             key={iframeKey}
             ref={iframeRef}
-            src={`/carta/${cartaId}?edit=1`}
+            src={`/carta/${cartaId}?edit=1&res=base`}
             title="layout"
             onLoad={onIframeLoad}
             style={{ width: canvas.w, height: canvas.h, transform: `scale(${SCALE})` }}

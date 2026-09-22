@@ -57,3 +57,26 @@ export function debounce(fn, ms = 800) {
     t = setTimeout(() => fn(...args), ms);
   };
 }
+
+// Sube un archivo crudo (tipografías, fondos, logos, paquetes de promo).
+// El nombre original viaja en ?name= porque el content-type no es confiable.
+export async function uploadFile(path, file, params = {}) {
+  const qs = new URLSearchParams({ name: file.name, ...params });
+  const res = await fetch(`/api${path}?${qs}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/octet-stream' },
+    body: file,
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.error || 'Error al subir el archivo');
+  if (json.version) lastVersion = json.version;
+  return json;
+}
+
+export async function apiDelete(path) {
+  const res = await fetch(`/api${path}`, { method: 'DELETE' });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.error || `DELETE ${path} → ${res.status}`);
+  if (json.version) lastVersion = json.version;
+  return json;
+}

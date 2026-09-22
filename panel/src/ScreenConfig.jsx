@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { apiGet, apiPut } from './api.js';
+import { OptionCards } from './OptionCards.jsx';
 
 // Configuración de pantallas: sucursales y pantallas (crear/renombrar/borrar),
 // asignación de cartas por horario, rotación física de la TV (0/90/180/270)
@@ -87,7 +88,7 @@ export default function ScreenConfig() {
   useEffect(() => {
     apiGet('/config/dispatch').then((r) => setCfg(r.data)).catch((e) => setStatus(e.message));
     apiGet('/menus')
-      .then((r) => setCartas([...r.menus.map((m) => m.id), 'promociones']))
+      .then((r) => setCartas([...r.menus.map((m) => m.id), 'promociones', 'promociones-horizontal']))
       .catch(() => {});
   }, []);
 
@@ -169,24 +170,24 @@ export default function ScreenConfig() {
                   ✕ pantalla
                 </button>
               </div>
-              <div className="row" style={{ marginBottom: 10 }}>
-                <span>Carta por defecto:</span>
-                <select value={screen.default}
-                  onChange={(e) => updateScreen(sucId, panId, (s) => { s.default = e.target.value; })}>
-                  {cartas.map((c) => <option key={c}>{c}</option>)}
-                </select>
-                <span>Rotación de TV:</span>
-                <select value={rotationOf(screen)}
-                  title="Cómo está montada físicamente la TV — el canvas se rota para compensar"
-                  onChange={(e) => updateScreen(sucId, panId, (s) => {
-                    s.rotation = Number(e.target.value);
+              <div className="opt-row" style={{ marginBottom: 12 }}>
+                <OptionCards label="Carta por defecto" size="xs" value={screen.default}
+                  onChange={(v) => updateScreen(sucId, panId, (s) => { s.default = v; })}
+                  options={cartas.map((c) => ({
+                    id: c, label: c.replace(/-/g, ' '),
+                    sketch: c === 'promociones-horizontal' ? 'o-horizontal' : 'o-vertical',
+                  }))} />
+                <OptionCards label="Cómo está montada la TV" size="xs" value={rotationOf(screen)}
+                  onChange={(v) => updateScreen(sucId, panId, (s) => {
+                    s.rotation = v;
                     delete s.orientation; // limpia el formato viejo
-                  })}>
-                  <option value={0}>0° (normal)</option>
-                  <option value={90}>90°</option>
-                  <option value={180}>180°</option>
-                  <option value={270}>270°</option>
-                </select>
+                  })}
+                  options={[
+                    { id: 0, label: 'Normal', hint: 'Sin girar', node: <span className="sk-tv" /> },
+                    { id: 90, label: 'Girada 90°', hint: 'De pie →', node: <span className="sk-tv" style={{ rotate: '90deg' }} /> },
+                    { id: 180, label: 'De cabeza', hint: '180°', node: <span className="sk-tv" style={{ rotate: '180deg' }} /> },
+                    { id: 270, label: 'Girada 270°', hint: 'De pie ←', node: <span className="sk-tv" style={{ rotate: '270deg' }} /> },
+                  ]} />
               </div>
               {(screen.schedule || []).map((rule, i) => (
                 <div className="row" key={i} style={{ marginBottom: 6 }}>
@@ -198,10 +199,12 @@ export default function ScreenConfig() {
                   <span>→</span>
                   <input type="time" value={rule.to || ''}
                     onChange={(e) => updateScreen(sucId, panId, (s) => { s.schedule[i].to = e.target.value || null; })} />
-                  <select value={rule.carta}
-                    onChange={(e) => updateScreen(sucId, panId, (s) => { s.schedule[i].carta = e.target.value; })}>
-                    {cartas.map((c) => <option key={c}>{c}</option>)}
-                  </select>
+                  <OptionCards size="mini" value={rule.carta}
+                    onChange={(v) => updateScreen(sucId, panId, (s) => { s.schedule[i].carta = v; })}
+                    options={cartas.map((c) => ({
+                      id: c, label: c.replace(/-/g, ' '), hint: 'Carta que se muestra en este horario',
+                      sketch: c === 'promociones-horizontal' ? 'o-horizontal' : 'o-vertical',
+                    }))} />
                   <button className="ghost small" disabled={i === 0}
                     onClick={() => updateScreen(sucId, panId, (s) => {
                       [s.schedule[i - 1], s.schedule[i]] = [s.schedule[i], s.schedule[i - 1]];

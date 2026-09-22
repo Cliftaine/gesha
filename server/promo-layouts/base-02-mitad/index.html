@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  02 · Mitad y sello — diseño de promoción incluido en Gesha (1080×1920).
+  Foto arriba, panel crema abajo y el precio en un sello redondo.
+  Todos los diseños "base-…" comparten los mismos campos, así que una promo
+  puede cambiar de diseño sin perder lo capturado. Copia esta carpeta como
+  punto de partida para tu propia plantilla (.zip con index.html + style.css).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>02 · Mitad y sello</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<main class="slide entra" data-logo="{{opt:logo_pos|arriba-izquierda,arriba-centro,arriba-derecha,abajo-izquierda,abajo-centro,abajo-derecha,oculto}}">
+  <img class="foto" src="{{img:foto|https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=1400&q=80&auto=format&fit=crop}}" alt="" onerror="this.style.display='none'"/>
+  <div class="velo"></div>
+  <img class="logo" src="{{img:logo|/assets/isotipos/manta-02.svg}}" alt="" onerror="this.style.display='none'"/>
+  <section class="texto">
+    <p class="slogan">{{slogan|Horario estelar}}</p>
+    <h1 class="titulo">{{titulo|Desayunos Manta}}</h1>
+    <div class="precio">{{precio|$99}}</div>
+    <ul class="contiene">{{list:contiene|Chilaquiles o huevos al gusto;Café americano;Pan dulce de la casa}}</ul>
+  </section>
+  <p class="tyc">{{tyc|Todos los días hasta las 11:30 am. Aplican restricciones.}}</p>
+</main>
+<script>
+  // El carrusel avisa cuando este slide entra: se reinicia la animación.
+  addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'gesha:slide-active') return;
+    const s = document.querySelector('.slide');
+    s.classList.remove('entra');
+    void s.offsetWidth;
+    s.classList.add('entra');
+  });
+</script>
+</body>
+</html>

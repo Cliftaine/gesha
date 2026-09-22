@@ -3,6 +3,7 @@
 // comida del día de hoy/mañana, promo del día del servicio de comida).
 const store = require('./store');
 const { ruleMatches, dateWindowMatches, localParts } = require('./dispatch');
+const promoPackages = require('./promo-packages');
 
 // Imágenes por defecto para slides dinámicos (Unsplash, como los seeds actuales).
 const DEFAULT_IMAGES = {
@@ -26,7 +27,15 @@ function weatherBucket(tempC, wcfg) {
   return 'templado';
 }
 
-function toSlide(p, score) {
+// Una promo guarda un diseño por orientación: `package` (vertical) y
+// `packageH` (horizontal). Sin diseño para la orientación ⇒ slide estándar.
+function packageFor(p, orientation) {
+  const pkg = promoPackages.get(orientation === 'horizontal' ? p.packageH : p.package);
+  return pkg && promoPackages.orientationOf(pkg) === orientation ? pkg : null;
+}
+
+function toSlide(p, score, orientation = 'vertical') {
+  const pkg = packageFor(p, orientation);
   return {
     id: p.id,
     kicker: p.kicker || '',
@@ -36,16 +45,32 @@ function toSlide(p, score) {
     description: p.description || '',
     footnote: p.footnote || '',
     image: p.image || DEFAULT_IMAGES.promoDelDia,
+    // Logo propio de esta promo en el diseño estándar (si no, el isotipo general).
+    logo: typeof p.logo === 'string' && /^(\/uploads\/|\/assets\/)[^"'<>\s]+$/.test(p.logo) ? p.logo : null,
+    // Diseño propio: paquete HTML subido (ver promo-packages.js).
+    package: pkg ? pkg.id : null,
+    packageSize: pkg ? { w: pkg.width, h: pkg.height } : null,
     score,
   };
 }
 
 // selectSlides(now, weather, comida, sucursal) → slides ordenados por score.
-function selectSlides(now, weather, comida, sucursal = null) {
-  const cfg = store.get('data/promos.json');
+// opts.cfg: promos sin guardar (vista previa del panel). En ese modo se muestran
+// TODAS las promociones en el orden de la lista, sin mirar programación, para
+// poder revisar cualquiera mientras se edita.
+function selectSlides(now, weather, comida, sucursal = null, orientation = 'vertical', opts = {}) {
+  const cfg = opts.cfg || store.get('data/promos.json');
+  if (opts.cfg) {
+    const list = cfg.promos.filter((p) => p.enabled);
+    const slides = (list.length ? list : cfg.promos).map((p) => ({ ...toSlide(p, p.priority, orientation), previewValues: p.values || {} }));
+    return { slides, rotation: cfg.rotation, weather: { bucket: 'templado' } };
+  }
   const settings = store.get('config/settings.json');
   const { day, minutes } = localParts(now, settings.timezone);
   const wcfg = cfg.weather;
+  // Clima apagado por ahora (gestión simple): sin boost por etiquetas ni textos
+  // por temperatura, salvo que promos.json traiga weather.enabled === true.
+  if (!wcfg.enabled) weather = null;
   const bucket = weatherBucket(weather?.tempC, wcfg);
   const candidates = [];
 
@@ -56,11 +81,13 @@ function selectSlides(now, weather, comida, sucursal = null) {
     const rules = p.rules || {};
     if (!dateWindowMatches(rules, now, settings.timezone)) continue;
     if (!ruleMatches(rules, day, minutes)) continue;
-    candidates.push(toSlide(p, p.priority + weatherBoost(p.tags, weather?.tempC, wcfg)));
+    candidates.push(toSlide(p, p.priority + weatherBoost(p.tags, weather?.tempC, wcfg), orientation));
   }
 
-  // 2. Slides dinámicos
-  const d = cfg.dynamic;
+  // 2. Slides dinámicos (promociones automáticas). Apagados por ahora para una
+  // gestión más simple: solo corren si promos.json trae "dynamicEnabled": true.
+  // La configuración de cada uno se conserva en cfg.dynamic.
+  const d = cfg.dynamicEnabled === true ? cfg.dynamic : {};
   const inWindow = (cfgSlide) => ruleMatches({ days: [], from: cfgSlide.from, to: cfgSlide.to }, day, minutes);
 
   if (d.desayunos?.enabled && inWindow(d.desayunos)) {
@@ -121,7 +148,7 @@ function selectSlides(now, weather, comida, sucursal = null) {
   candidates.sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
   let slides = candidates.slice(0, cfg.rotation.maxSlides || 6);
   if (!slides.length) {
-    slides = cfg.promos.filter((p) => p.enabled).map((p) => toSlide(p, p.priority));
+    slides = cfg.promos.filter((p) => p.enabled).map((p) => toSlide(p, p.priority, orientation));
   }
   return { slides, rotation: cfg.rotation, weather: { ...weather, bucket } };
 }

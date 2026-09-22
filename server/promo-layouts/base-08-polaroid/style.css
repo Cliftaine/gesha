@@ -1,0 +1,37 @@
+/* ── Base común de los diseños incluidos (1080×1920) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:120px;width:auto;max-width:340px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:72px;left:80px}
+[data-logo="arriba-centro"] .logo{top:72px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:72px;right:80px}
+[data-logo="abajo-izquierda"] .logo{bottom:140px;left:80px}
+[data-logo="abajo-centro"] .logo{bottom:140px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:140px;right:80px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ── 08 · Polaroid: Papel kraft, foto tipo polaroid inclinada y slogan manuscrito. ── */
+.slide{background:radial-gradient(ellipse at 50% 30%,#e2cfae 0%,#cdb389 100%)}
+.foto{inset:auto;left:150px;top:300px;width:780px;height:900px;border:30px solid #fdfbf6;border-bottom-width:130px;rotate:-4deg;box-shadow:0 30px 60px rgba(60,40,20,.35)}
+.texto{position:absolute;inset:0;padding:0 90px;text-align:center;color:#2f2a22}
+.slogan{position:absolute;left:0;right:0;top:120px;font-family:Caveat,cursive;font-weight:700;font-size:104px;line-height:1;color:#7a4a2a;rotate:-3deg}
+.precio{position:absolute;right:80px;top:1040px;font-family:Fraunces,Georgia,serif;font-weight:600;font-size:110px;line-height:1;background:#9a4e2f;color:#fdfbf6;padding:26px 42px 30px;border-radius:20px;rotate:7deg;box-shadow:0 16px 30px rgba(60,40,20,.35)}
+.titulo{position:absolute;left:90px;right:90px;top:1330px;font-family:Fraunces,Georgia,serif;font-weight:500;font-size:86px;line-height:1.02;letter-spacing:-.01em}
+.contiene{position:absolute;left:120px;right:120px;top:1540px;font-size:35px;line-height:1.5;color:#5a4c3a}
+.tyc{position:absolute;left:90px;right:90px;bottom:60px;text-align:center;font-size:21px;color:#7d6c55}
+[data-logo^="abajo"] .logo{bottom:104px;height:84px}

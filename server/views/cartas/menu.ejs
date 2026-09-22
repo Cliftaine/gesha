@@ -11,8 +11,34 @@
     : { catMb: '34px', headMb: '14px', rowPad: '12px 2px', nameSize: '27px', priceSize: '30px', noteSize: '20px', gridPad: '30px 64px 0px' };
 
   const anim = menu.animations || {};
-  const entrance = anim.entrance === 'fade-up';
+  // Entrada del contenido: 'fade-up' (original) y variantes. Cada una es un
+  // keyframe "from"; el CSS de fade-up se conserva tal cual.
+  const ENTRANCES = {
+    'fade-up': 'opacity:0;transform:translateY(26px)',
+    fade: 'opacity:0',
+    slide: 'opacity:0;transform:translateX(-46px)',
+    zoom: 'opacity:0;transform:scale(.9)',
+    blur: 'opacity:0;filter:blur(12px)',
+  };
+  const entranceKind = ENTRANCES[anim.entrance] ? anim.entrance : null;
+  const entrance = !!entranceKind;
   const typewriter = anim.title === 'typewriter';
+  // Título: entrada (además de typewriter) y animación continua (loop).
+  const TITLE_INS = {
+    fade: ['fxTitleFade 1.4s ease both', '@keyframes fxTitleFade{from{opacity:0}to{opacity:1}}'],
+    tracking: ['fxTitleTrack 1.3s cubic-bezier(.2,.7,.2,1) both', '@keyframes fxTitleTrack{from{opacity:0;letter-spacing:.35em}to{opacity:1;letter-spacing:inherit}}'],
+    blur: ['fxTitleBlur 1.2s ease both', '@keyframes fxTitleBlur{from{opacity:0;filter:blur(14px)}to{opacity:1;filter:blur(0)}}'],
+    drop: ['fxTitleDrop .9s cubic-bezier(.2,.7,.2,1) both', '@keyframes fxTitleDrop{from{opacity:0;transform:translateY(-34px)}to{opacity:1;transform:none}}'],
+  };
+  const TITLE_LOOPS = {
+    respirar: ['fxTitleBreath 4.5s ease-in-out 1.5s infinite', '@keyframes fxTitleBreath{0%,100%{opacity:1}50%{opacity:.5}}'],
+    flotar: ['fxTitleFloat 5s ease-in-out 1.5s infinite', '@keyframes fxTitleFloat{0%,100%{translate:0 0}50%{translate:0 -8px}}'],
+    brillo: ['fxTitleGlow 3.6s ease-in-out 1.5s infinite', '@keyframes fxTitleGlow{0%,100%{text-shadow:0 0 0 rgba(152,106,76,0)}50%{text-shadow:0 0 26px rgba(152,106,76,.75)}}'],
+    latido: ['fxTitleBeat 2.6s ease-in-out 1.5s infinite', '@keyframes fxTitleBeat{0%,100%{scale:1}50%{scale:1.035}}'],
+  };
+  const titleIn = TITLE_INS[anim.title] || null;
+  const titleLoop = TITLE_LOOPS[anim.titleLoop] || null;
+  const titleFx = !!(titleIn || titleLoop);
   const accentStyle = anim.accentStyle || 'pulse';
   const replaySeconds = Number(anim.replaySeconds) || 0;
 
@@ -27,12 +53,34 @@
   const CW = menu.canvas === 'horizontal' ? 1920 : 1080;
   const CH = menu.canvas === 'horizontal' ? 1080 : 1920;
 
+  // Animación del logo: mark.anim ('viva' = SVG/aleteo original; el resto son
+  // loops CSS con propiedades individuales para no pisar el espejo scaleX(-1)).
+  // Compat: mark.live === true sin mark.anim ⇒ 'viva'.
+  const LOGO_FX = {
+    flotar: 'fxLogoFloat 4.5s ease-in-out infinite',
+    desvanecer: 'fxLogoFade 5s ease-in-out infinite',
+    balanceo: 'fxLogoSway 5s ease-in-out infinite',
+    latido: 'fxLogoBeat 3s ease-in-out infinite',
+    voltear: 'fxLogoFlip 8s ease-in-out infinite',
+  };
   const ISO_IDS = ['02', '03', '04', 'mesa1'];
   const mark = menu.mark || null;
   const markSrc = mark && ISO_IDS.includes(mark.isotipo)
-    ? `/assets/isotipos/manta-${mark.isotipo}${mark.live ? '-live' : ''}.svg`
+    ? `/assets/isotipos/manta-${mark.isotipo}${mark.live && !LOGO_FX[mark.anim] ? '-live' : ''}.svg`
     : '/assets/manta-mark.png';
-  const legacyLive = !!(mark && mark.live && !ISO_IDS.includes(mark.isotipo));
+  // Logo propio (theme.logo): reemplaza los isotipos; no se espeja ni se anima.
+  const tlogo = menu.theme && menu.theme.logo && menu.theme.logo.url ? menu.theme.logo : null;
+  const logoAnim = mark && LOGO_FX[mark.anim] ? mark.anim : null;
+  const footAnim = menu.theme && LOGO_FX[menu.theme.wordmarkAnim] ? menu.theme.wordmarkAnim : null;
+  const hideLogo = !!(menu.theme && menu.theme.logo && menu.theme.logo.hidden);
+  const hideWordmark = !!(menu.theme && menu.theme.wordmark && menu.theme.wordmark.hidden);
+  const legacyLive = !tlogo && !logoAnim && !!(mark && mark.live && !ISO_IDS.includes(mark.isotipo));
+  const markClass = legacyLive ? ' class="fx-manta"' : logoAnim ? ` class="fx-logo-${logoAnim}"` : '';
+  const logoSrc = tlogo ? tlogo.url : markSrc;
+  const logoAttr = tlogo ? ' data-custom="1"' : '';
+  const showRightLogo = !tlogo || tlogo.placement !== 'izquierda';
+  const wordmarkSrc = (menu.theme && menu.theme.wordmark && menu.theme.wordmark.url) || '/assets/wordmark-trim.png';
+  const markers = menu.markers || {};
 
   // ¿Hay algún acento marcado? (items, categorías o banners)
   let hasAccents = (showFeatured && menu.featured.accent) || (showExtras && menu.extras.accent);
@@ -54,12 +102,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>*{box-sizing:border-box}html,body{margin:0;padding:0;background:#efece6}a{color:#986A4C}a:hover{color:#6E5235}</style>
-<% if (entrance || typewriter || hasAccents || legacyLive) { %>
+<% if (entrance || typewriter || hasAccents || legacyLive || titleFx || logoAnim || footAnim) { %>
 <style data-fx>
-<% if (entrance) { %>
+<% if (entranceKind === 'fade-up') { %>
 @keyframes fxFadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
 .fx-in{opacity:0;animation:fxFadeUp .8s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--fx-delay,0s)}
+<% } else if (entrance) { %>
+@keyframes fxEnter{from{<%- ENTRANCES[entranceKind] %>}to{opacity:1;transform:none;filter:none}}
+.fx-in{opacity:0;animation:fxEnter .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--fx-delay,0s)}
 <% } %>
+<% if (titleFx) { %>
+<%- [titleIn, titleLoop].filter(Boolean).map((t) => t[1]).join('\n') %>
+.fx-title{display:inline-block;animation:<%- [titleIn, titleLoop].filter(Boolean).map((t) => t[0]).join(',') %>}
+<% } %>
+<% if (logoAnim || footAnim) { %>
+@keyframes fxLogoFloat{0%,100%{translate:0 0}50%{translate:0 -12px}}
+@keyframes fxLogoFade{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes fxLogoSway{0%,100%{rotate:calc(var(--dir,1) * -5deg)}50%{rotate:calc(var(--dir,1) * 5deg)}}
+@keyframes fxLogoBeat{0%,100%{scale:1}50%{scale:1.09}}
+@keyframes fxLogoFlip{0%,78%{rotate:y 0deg}100%{rotate:y 360deg}}
+<% for (const k of new Set([logoAnim, footAnim].filter(Boolean))) { %>.fx-logo-<%= k %>{animation:<%- LOGO_FX[k] %>;transform-origin:50% 20%}
+<% } %><% } %>
 <% if (typewriter) { %>
 .fx-caret::after{content:'';display:inline-block;width:4px;height:.72em;background:rgb(122,90,60);margin-left:8px;animation:fxBlink 1s steps(1) infinite}
 @keyframes fxBlink{50%{opacity:0}}
@@ -73,6 +136,16 @@
 .fx-manta{animation:fxFlap 7s ease-in-out infinite;transform-origin:50% 42%}
 @keyframes fxFlap{0%,50%,100%{transform:scaleX(var(--flip,1)) scaleY(1) rotate(0deg)}58%{transform:scaleX(var(--flip,1)) scaleY(.88) rotate(-2deg)}66%{transform:scaleX(var(--flip,1)) scaleY(1.06) rotate(1.5deg)}74%{transform:scaleX(var(--flip,1)) scaleY(.95) rotate(-0.8deg)}82%{transform:scaleX(var(--flip,1)) scaleY(1.02) rotate(0.4deg)}}
 <% } %>
+<% if (hasAccents && accentStyle === 'resplandor') { %>
+.fx-accent{position:relative;border-radius:12px}
+.fx-accent::after{content:'';position:absolute;inset:-4px -10px;border-radius:14px;pointer-events:none;animation:fxGlow 3s ease-in-out infinite}
+@keyframes fxGlow{0%,100%{background:rgba(152,106,76,0);box-shadow:0 0 0 0 rgba(152,106,76,0)}50%{background:rgba(152,106,76,.13);box-shadow:0 0 26px 6px rgba(152,106,76,.2)}}
+<% } %>
+<% if (hasAccents && accentStyle === 'subrayado') { %>
+.fx-accent{position:relative}
+.fx-accent::after{content:'';position:absolute;left:0;bottom:-2px;height:3px;width:100%;border-radius:3px;background:rgb(152,106,76);transform-origin:0 50%;pointer-events:none;animation:fxUnder 3.2s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes fxUnder{0%{transform:scaleX(0);opacity:1}55%{transform:scaleX(1);opacity:1}85%,100%{transform:scaleX(1);opacity:0}}
+<% } %>
 <% if (hasAccents && accentStyle === 'shimmer') { %>
 .fx-accent{position:relative;overflow:hidden;border-radius:12px;background:rgba(122,90,60,.06)}
 .fx-accent::before{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.7) 50%,transparent 60%);transform:translateX(-100%);animation:fxShimmer 3.2s ease-in-out infinite;pointer-events:none}
@@ -83,8 +156,8 @@
 <%- overrides %>
 </head>
 <body>
-<div style="width: <%= CW %>px; height: <%= CH %>px; position: relative; overflow: hidden; background: rgb(244, 239, 230); font-family: Archivo, system-ui, sans-serif; -webkit-font-smoothing: antialiased;"><div style="position: absolute; inset: 26px; border: 1px solid rgba(122, 90, 60, 0.16); pointer-events: none;"></div><div data-zone="title" style="position: relative; padding: 58px 80px 0px;"><img src="<%= markSrc %>"<%- legacyLive ? ' class="fx-manta"' : '' %> alt="" style="position: absolute; left: 58px; top: 48px; height: 126px;"><img src="<%= markSrc %>"<%- legacyLive ? ' class="fx-manta"' : '' %> alt="" style="position: absolute; right: 58px; top: 48px; height: 126px; transform: scaleX(-1);<%- legacyLive ? ' --flip: -1;' : '' %>"><div style="text-align: center; font-family: &quot;Cormorant Garamond&quot;, Georgia, serif; font-weight: 500; font-size: 96px; line-height: 0.95; color: rgb(42, 38, 32); letter-spacing: -0.015em;"><span<%- typewriter ? ' data-fx-typewriter' : '' %>><%= menu.title %></span></div></div><div style="height: 2px; background: rgb(154, 122, 85); opacity: 0.5; margin: 18px 80px 0px;"></div><div style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 50px; padding: <%= S.gridPad %>; align-items: start;"><% menu.columns.forEach((column, ci) => { %><div data-zone="col-<%= ci %>" style="min-width: 0px;"><% for (const catId of column) { const cat = menu.categories[catId]; if (!cat) continue; %><%- include('../partials/category', { cat, catId, menu, S, fxDelay: nextDelay() }) %><% } %></div><% }) %></div><% if (showFeatured) { %><%- include('../partials/featured-box', { featured: menu.featured, guisadoHoy, fxDelay: nextDelay() }) %><% } %><% if (showStrip) { %><%- include('../partials/image-strip', { imageStrip: menu.imageStrip.slots || menu.imageStrip }) %><% } %><% if (showExtras) { %><%- include('../partials/extras-strip', { extras: menu.extras, fxDelay: nextDelay() }) %><% } %><div data-zone="wordmark" style="position: absolute; left: 0px; right: 0px; bottom: 44px; display: flex; justify-content: center;"><img src="/assets/wordmark-trim.png" alt="Manta Café" style="height: 60px;"></div></div>
-<% if (typewriter || (entrance && replaySeconds > 0)) { %>
+<div style="width: <%= CW %>px; height: <%= CH %>px; position: relative; overflow: hidden; background: rgb(244, 239, 230); font-family: Archivo, system-ui, sans-serif; -webkit-font-smoothing: antialiased;<%- locals.zoom4k ? ' zoom: 2;' : '' %>"><div style="position: absolute; inset: 26px; border: 1px solid rgba(122, 90, 60, 0.16); pointer-events: none;"></div><div data-zone="title" style="position: relative; padding: 58px 80px 0px;"><% if (!hideLogo) { %><img src="<%= logoSrc %>"<%- logoAttr %><%- markClass %> alt="" style="position: absolute; left: 58px; top: 48px; height: 126px;"><% if (showRightLogo) { %><img src="<%= logoSrc %>"<%- logoAttr %><%- markClass %> alt="" style="position: absolute; right: 58px; top: 48px; height: 126px;<%- tlogo ? '' : ' transform: scaleX(-1);' %><%- legacyLive ? ' --flip: -1;' : '' %><%- logoAnim ? ' --dir: -1;' : '' %>"><% } %><% } %><div style="text-align: center; font-family: &quot;Cormorant Garamond&quot;, Georgia, serif; font-weight: 500; font-size: 96px; line-height: 0.95; color: rgb(42, 38, 32); letter-spacing: -0.015em;"><span<%- typewriter ? ' data-fx-typewriter' : '' %><%- titleFx ? ' class="fx-title"' : '' %>><%= menu.title %></span></div></div><div style="height: 2px; background: rgb(154, 122, 85); opacity: 0.5; margin: 18px 80px 0px;"></div><div style="display: grid; grid-template-columns: <%= menu.columns.map(() => '1fr').join(' ') %>; column-gap: <%= menu.columns.length > 2 ? '40px' : '50px' %>; padding: <%= S.gridPad %>; align-items: start;"><% menu.columns.forEach((column, ci) => { %><div data-zone="col-<%= ci %>" style="min-width: 0px;"><% for (const catId of column) { if (markers[catId]) { %><%- include('../partials/marker', { marker: markers[catId], markerId: catId, fxDelay: nextDelay() }) %><% continue; } const cat = menu.categories[catId]; if (!cat) continue; %><%- include('../partials/category', { cat, catId, menu, S, fxDelay: nextDelay() }) %><% } %></div><% }) %></div><% if (showFeatured) { %><%- include('../partials/featured-box', { featured: menu.featured, guisadoHoy, fxDelay: nextDelay() }) %><% } %><% if (showStrip) { %><%- include('../partials/image-strip', { imageStrip: menu.imageStrip.slots || menu.imageStrip }) %><% } %><% if (showExtras) { %><%- include('../partials/extras-strip', { extras: menu.extras, fxDelay: nextDelay() }) %><% } %><div data-zone="wordmark" style="position: absolute; left: 0px; right: 0px; bottom: 44px; display: flex; justify-content: center;"><% if (!hideWordmark) { %><img src="<%= wordmarkSrc %>"<%- footAnim ? ` class="fx-logo-${footAnim}"` : '' %> alt="Manta Café" style="height: 60px;"><% } %></div></div>
+<% if (typewriter || ((entrance || titleIn) && replaySeconds > 0)) { %>
 <script data-fx>
 (() => {
   const TYPE_MS = 110;
@@ -105,7 +178,7 @@
     }, TYPE_MS);
   }
   function replayEntrance() {
-    document.querySelectorAll('.fx-in').forEach((el) => {
+    document.querySelectorAll('.fx-in, .fx-title').forEach((el) => {
       el.style.animation = 'none';
       void el.offsetWidth; // reflow para reiniciar la animación
       el.style.animation = '';
@@ -114,7 +187,7 @@
   <% if (typewriter) { %>typewriter();<% } %>
   <% if (replaySeconds > 0) { %>
   setInterval(() => {
-    <% if (entrance) { %>replayEntrance();<% } %>
+    <% if (entrance || titleIn) { %>replayEntrance();<% } %>
     <% if (typewriter) { %>typewriter();<% } %>
   }, <%= replaySeconds * 1000 %>);
   <% } %>

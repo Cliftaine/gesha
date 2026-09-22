@@ -1,80 +1,26 @@
 {
   "timezone": "America/Mexico_City",
   "sucursales": {
-    "centro": {
-      "name": "Centro",
+    "bf": {
+      "name": "bf",
       "pantallas": {
         "pantalla_1": {
-          "name": "Barra principal",
-          "default": "bebidas",
-          "schedule": [
-            {
-              "days": [
-                "mon",
-                "tue",
-                "wed",
-                "thu",
-                "fri"
-              ],
-              "from": "07:00",
-              "to": "12:30",
-              "carta": "alimentos"
-            },
-            {
-              "days": [
-                "mon",
-                "tue",
-                "wed",
-                "thu",
-                "fri"
-              ],
-              "from": "12:30",
-              "to": "17:00",
-              "carta": "alimentos"
-            },
-            {
-              "days": [
-                "sat",
-                "sun"
-              ],
-              "from": "08:00",
-              "to": "22:00",
-              "carta": "alimentos"
-            }
-          ],
-          "orientation": "ccw"
+          "name": "",
+          "default": "alimentos",
+          "rotation": 270,
+          "schedule": []
         },
         "pantalla_2": {
-          "name": "Entrada",
+          "name": "pantalla_2",
+          "default": "bebidas",
+          "rotation": 270,
+          "schedule": []
+        },
+        "pantalla_3": {
+          "name": "pantalla_3",
           "default": "promociones",
-          "schedule": [
-            {
-              "days": [
-                "mon",
-                "tue",
-                "wed",
-                "thu",
-                "fri",
-                "sat",
-                "sun"
-              ],
-              "from": "16:00",
-              "to": "20:00",
-              "carta": "bebidas"
-            },
-            {
-              "days": [
-                "mon",
-                "tue",
-                "wed",
-                "thu",
-                "fri"
-              ],
-              "from": "08:00",
-              "to": "12:00",
-              "carta": "promociones"
-            }
-          ]
+          "rotation": 270,
+          "schedule": []
         }
       }
     }

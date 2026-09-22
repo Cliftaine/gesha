@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  09 · Precio protagonista — diseño de promoción incluido en Gesha (1080×1920).
+  Fondo oscuro, precio enorme arriba y la foto en un arco abajo.
+  Todos los diseños "base-…" comparten los mismos campos, así que una promo
+  puede cambiar de diseño sin perder lo capturado. Copia esta carpeta como
+  punto de partida para tu propia plantilla (.zip con index.html + style.css).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>09 · Precio protagonista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<main class="slide entra" data-logo="{{opt:logo_pos|arriba-centro,arriba-izquierda,arriba-derecha,abajo-izquierda,abajo-centro,abajo-derecha,oculto}}">
+  <img class="foto" src="{{img:foto|https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=1400&q=80&auto=format&fit=crop}}" alt="" onerror="this.style.display='none'"/>
+  <div class="velo"></div>
+  <img class="logo" src="{{img:logo|/assets/isotipos/manta-02.svg}}" alt="" onerror="this.style.display='none'"/>
+  <section class="texto">
+    <p class="slogan">{{slogan|Promo del día}}</p>
+    <h1 class="titulo">{{titulo|Frappé + galleta}}</h1>
+    <div class="precio">{{precio|$89}}</div>
+    <ul class="contiene">{{list:contiene|Frappé de café u Oreo;Galleta de la casa}}</ul>
+  </section>
+  <p class="tyc">{{tyc|Válido únicamente hoy, en tienda.}}</p>
+</main>
+<script>
+  // El carrusel avisa cuando este slide entra: se reinicia la animación.
+  addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'gesha:slide-active') return;
+    const s = document.querySelector('.slide');
+    s.classList.remove('entra');
+    void s.offsetWidth;
+    s.classList.add('entra');
+  });
+</script>
+</body>
+</html>

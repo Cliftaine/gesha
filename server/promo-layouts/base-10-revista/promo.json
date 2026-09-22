@@ -1,0 +1,14 @@
+{
+  "name": "10 · Revista",
+  "description": "Editorial claro: foto con margen, título serif enorme y lista a dos columnas.",
+  "labels": {
+    "foto": "Imagen",
+    "titulo": "Título",
+    "precio": "Precio",
+    "slogan": "Slogan / promocional",
+    "contiene": "Lo que contiene (uno por línea)",
+    "tyc": "Términos y condiciones",
+    "logo": "Logo",
+    "logo_pos": "Posición del logo"
+  }
+}

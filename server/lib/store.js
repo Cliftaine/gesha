@@ -37,22 +37,26 @@ function getSafe(relPath, fallback = null) {
   }
 }
 
-function put(relPath, obj) {
+// silent: escribe sin subir la versión ni avisar a las pantallas (borradores).
+function put(relPath, obj, { silent = false } = {}) {
   const abs = absPath(relPath);
+  fs.mkdirSync(path.dirname(abs), { recursive: true });
   const tmp = abs + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(obj, null, 2) + '\n');
   fs.renameSync(tmp, abs); // atómico en el mismo filesystem
   const stat = fs.statSync(abs);
   cache.set(relPath, { mtimeMs: stat.mtimeMs, data: obj });
+  if (silent) return version;
   version++;
   emitter.emit('change', relPath);
   return version;
 }
 
-function remove(relPath) {
+function remove(relPath, { silent = false } = {}) {
   const abs = absPath(relPath);
   if (fs.existsSync(abs)) fs.unlinkSync(abs);
   cache.delete(relPath);
+  if (silent) return version;
   version++;
   emitter.emit('change', relPath);
   return version;

@@ -190,19 +190,6 @@
               ]
             },
             {
-              "name": "Gorditas",
-              "variants": [
-                {
-                  "name": "Chicharrón",
-                  "price": 39
-                },
-                {
-                  "name": "Con quesillo",
-                  "price": 48
-                }
-              ]
-            },
-            {
               "name": "Tacos",
               "qualifier": "3 pz",
               "variants": [
@@ -300,13 +287,13 @@
           "items": [
             {
               "name": "Americana",
-              "price": 0,
+              "price": 90,
               "note": "La clásica, con queso amarillo, lechuga, jitomate y pepinillos"
             },
             {
               "name": "Tocino",
-              "price": 0,
-              "note": "Carne aplastada, acompañado de una mermalada de tocino con cebolla y queso philadelfia"
+              "price": 95,
+              "note": "Carne aplastada, acompañado de una mermalada de tocino con cebolla y queso amarillo"
             }
           ]
         }
@@ -316,7 +303,7 @@
   },
   "featured": {
     "title": "Comida del día",
-    "price": 110,
+    "price": 115,
     "label": "Incluye",
     "includes": [
       "Sopa o consomé",
@@ -328,12 +315,13 @@
     ],
     "footnote": "Para llevar: costo extra de $15",
     "liveGuisado": false,
-    "enabled": true
+    "enabled": true,
+    "size": "mediano"
   },
   "imageStrip": null,
   "extras": null,
   "mark": {
-    "isotipo": "03",
+    "isotipo": "mesa1",
     "live": true
   },
   "animations": {
@@ -341,5 +329,7 @@
     "entrance": "fade-up",
     "accentStyle": "shimmer",
     "replaySeconds": 0
-  }
+  },
+  "canvas": "vertical",
+  "resolution": "4k"
 }

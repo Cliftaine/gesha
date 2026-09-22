@@ -126,15 +126,8 @@
 
   tryAutoFullscreen();
 
-  // ── Cursor oculto tras 3s sin movimiento (señalización) ─────────────────
-  let cursorTimer;
-  function pokeCursor() {
-    body.classList.remove('hide-cursor');
-    clearTimeout(cursorTimer);
-    cursorTimer = setTimeout(() => body.classList.add('hide-cursor'), 3000);
-  }
-  addEventListener('pointermove', pokeCursor);
-  pokeCursor();
+  // El cursor se oculta siempre por CSS (ver player.ejs): en una TV no hay
+  // nada que señalar y los TV sticks lo dibujan enorme.
 
   // ── Reload completo diario (higiene en TV sticks) ────────────────────────
   const [rh, rm] = DAILY_RELOAD_AT.split(':').map(Number);

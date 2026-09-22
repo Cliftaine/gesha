@@ -15,7 +15,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.disable('x-powered-by');
 
 // Estáticos públicos (assets de cartas, uploads, player.js)
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public'), {
+  // Los SVG subidos (logos/iconos) nunca ejecutan scripts si se abren directo.
+  setHeaders: (res, file) => {
+    if (file.endsWith('.svg') && file.includes(`${path.sep}uploads${path.sep}`)) {
+      res.set('Content-Security-Policy', "script-src 'none'; sandbox");
+    }
+  },
+}));
 
 // ── Privado: UN solo punto de montaje por superficie ──────────────────────
 app.use('/panel', authGate, panelRouter);

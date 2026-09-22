@@ -4,11 +4,12 @@ import ContentEditor from './ContentEditor.jsx';
 
 const ROUTES = [
   ['#/pantallas', 'Configuración de pantallas'],
-  ['#/contenido', 'Contenido'],
+  ['#/cartas', 'Cartas'],
+  ['#/promociones', 'Promociones'],
 ];
 
 // Hashes viejos → nueva estructura.
-const LEGACY = { horarios: 'pantallas', menus: 'contenido', promos: 'contenido', layout: 'contenido' };
+const LEGACY = { horarios: 'pantallas', menus: 'cartas', contenido: 'cartas', layout: 'cartas', promos: 'promociones' };
 
 export default function App() {
   const [hash, setHash] = useState(location.hash || '#/pantallas');
@@ -47,7 +48,8 @@ export default function App() {
       </nav>
       <main className="main">
         {route === 'pantallas' && <ScreenConfig />}
-        {route === 'contenido' && <ContentEditor />}
+        {route === 'cartas' && <ContentEditor key="cartas" mode="cartas" />}
+        {route === 'promociones' && <ContentEditor key="promociones" mode="promociones" />}
       </main>
     </>
   );

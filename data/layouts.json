@@ -23,7 +23,7 @@
         "hidden": false
       },
       "cat-heladas": {
-        "hidden": true
+        "hidden": false
       },
       "cat-frappes": {
         "hidden": false
@@ -31,6 +31,10 @@
     }
   },
   "promociones": {
-    "zones": {}
+    "zones": {
+      "promo-text": {
+        "hidden": false
+      }
+    }
   }
 }

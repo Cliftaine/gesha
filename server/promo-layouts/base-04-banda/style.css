@@ -1,0 +1,38 @@
+/* ── Base común de los diseños incluidos (1080×1920) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:120px;width:auto;max-width:340px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:72px;left:80px}
+[data-logo="arriba-centro"] .logo{top:72px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:72px;right:80px}
+[data-logo="abajo-izquierda"] .logo{bottom:140px;left:80px}
+[data-logo="abajo-centro"] .logo{bottom:140px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:140px;right:80px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ── 04 · Banda diagonal: Foto completa cruzada por una banda de color con título y precio. ── */
+.velo{background:linear-gradient(to top,rgba(20,18,15,.94) 0%,rgba(20,18,15,.7) 24%,rgba(20,18,15,.1) 55%)}
+.texto{position:absolute;left:0;right:0;top:980px;padding:70px 84px;display:grid;grid-template-columns:1fr auto;align-items:end;column-gap:30px;color:#f3ede3}
+.texto::before{content:'';position:absolute;inset:-70px 0;background:#986a4c;clip-path:polygon(0 17%,100% 0,100% 83%,0 100%);z-index:-1}
+.slogan{grid-column:1 / -1;font-size:24px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:#f6dcc0;margin-bottom:6px}
+.titulo{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;font-size:150px;line-height:.92;letter-spacing:.01em;text-transform:uppercase}
+.precio{font-family:"Bebas Neue",Impact,sans-serif;font-size:210px;line-height:.85;color:#14120f}
+.contiene{position:absolute;top:100%;left:84px;right:84px;margin-top:130px;font-size:36px;font-weight:500;line-height:1.3}
+.contiene li{padding:14px 0 14px 46px;position:relative}
+.contiene li::before{content:'';position:absolute;left:0;top:26px;width:26px;height:4px;background:#c08a5e}
+.tyc{position:absolute;left:84px;right:84px;bottom:84px;font-size:20px;letter-spacing:.18em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.6)}

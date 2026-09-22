@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  05 · Póster — diseño de promoción incluido en Gesha (1080×1920).
+  Tipográfico: color sólido, foto en círculo y precio gigante.
+  Todos los diseños "base-…" comparten los mismos campos, así que una promo
+  puede cambiar de diseño sin perder lo capturado. Copia esta carpeta como
+  punto de partida para tu propia plantilla (.zip con index.html + style.css).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>05 · Póster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<main class="slide entra" data-logo="{{opt:logo_pos|abajo-centro,arriba-izquierda,arriba-centro,arriba-derecha,abajo-izquierda,abajo-derecha,oculto}}">
+  <img class="foto" src="{{img:foto|https://images.unsplash.com/photo-1547573854-74d2a71d0826?w=1400&q=80&auto=format&fit=crop}}" alt="" onerror="this.style.display='none'"/>
+  <div class="velo"></div>
+  <img class="logo" src="{{img:logo|/assets/isotipos/manta-02.svg}}" alt="" onerror="this.style.display='none'"/>
+  <section class="texto">
+    <p class="slogan">{{slogan|Comida del día}}</p>
+    <h1 class="titulo">{{titulo|Menú completo}}</h1>
+    <div class="precio">{{precio|$110}}</div>
+    <ul class="contiene">{{list:contiene|Sopa o consomé;Guisado con guarnición;Postre y agua}}</ul>
+  </section>
+  <p class="tyc">{{tyc|Lunes a viernes de 1 a 5 pm}}</p>
+</main>
+<script>
+  // El carrusel avisa cuando este slide entra: se reinicia la animación.
+  addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'gesha:slide-active') return;
+    const s = document.querySelector('.slide');
+    s.classList.remove('entra');
+    void s.offsetWidth;
+    s.classList.add('entra');
+  });
+</script>
+</body>
+</html>

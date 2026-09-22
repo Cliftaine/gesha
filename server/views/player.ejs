@@ -32,7 +32,13 @@
     border-radius: 10px; padding: 10px 16px; backdrop-filter: blur(4px);
   }
   body.show-fs #fs { display: block; }
-  body.hide-cursor, body.hide-cursor * { cursor: none !important; }
+  /* Señalización: el cursor nunca se ve. Los iframes no reciben el puntero
+     (si lo recibieran, mandaría el cursor de SU documento y no este), así que
+     el cursor:none del player aplica en toda la pantalla. Solo reaparece
+     mientras se ofrece el botón de pantalla completa, que sí necesita un clic. */
+  html, body, body * { cursor: none !important; }
+  iframe.stage { pointer-events: none; }
+  body.show-fs, body.show-fs #fs { cursor: pointer !important; }
 </style>
 </head>
 <body

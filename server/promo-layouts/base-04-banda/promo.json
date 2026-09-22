@@ -1,0 +1,14 @@
+{
+  "name": "04 · Banda diagonal",
+  "description": "Foto completa cruzada por una banda de color con título y precio.",
+  "labels": {
+    "foto": "Imagen",
+    "titulo": "Título",
+    "precio": "Precio",
+    "slogan": "Slogan / promocional",
+    "contiene": "Lo que contiene (uno por línea)",
+    "tyc": "Términos y condiciones",
+    "logo": "Logo",
+    "logo_pos": "Posición del logo"
+  }
+}

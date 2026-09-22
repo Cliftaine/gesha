@@ -325,23 +325,26 @@
     }
   },
   "featured": null,
-  "imageStrip": [
-    {
-      "id": "v2-p1",
-      "src": null,
-      "placeholder": "Foto producto"
-    },
-    {
-      "id": "v2-p2",
-      "src": null,
-      "placeholder": "Café en grano"
-    },
-    {
-      "id": "v2-p3",
-      "src": null,
-      "placeholder": "Foto producto"
-    }
-  ],
+  "imageStrip": {
+    "enabled": false,
+    "slots": [
+      {
+        "id": "v2-p1",
+        "src": null,
+        "placeholder": "Foto producto"
+      },
+      {
+        "id": "v2-p2",
+        "src": null,
+        "placeholder": "Café en grano"
+      },
+      {
+        "id": "v2-p3",
+        "src": null,
+        "placeholder": "Foto producto"
+      }
+    ]
+  },
   "extras": {
     "title": "Extras",
     "price": 13,
@@ -368,5 +371,6 @@
   "mark": {
     "isotipo": "mesa1",
     "live": true
-  }
+  },
+  "resolution": "4k"
 }

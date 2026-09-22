@@ -21,8 +21,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box}html,body{margin:0;padding:0;background:#14120f}a{color:#986A4C}a:hover{color:#C08A5E}
-.stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#14120f}
-.frame{position:absolute;inset:0;width:1080px;height:1920px;overflow:hidden;background:#14120f;color:#F3EDE3;font-family:Archivo,system-ui,sans-serif;opacity:0;transition:opacity <%= rotation.transitionMs %>ms ease}
+.stage{position:relative;width:<%= stage.w %>px;height:<%= stage.h %>px;overflow:hidden;background:#14120f}
+.frame{position:absolute;inset:0;width:<%= stage.w %>px;height:<%= stage.h %>px;overflow:hidden;background:#14120f;color:#F3EDE3;font-family:Archivo,system-ui,sans-serif;opacity:0;transition:opacity <%= rotation.transitionMs %>ms ease}
 .frame.active{opacity:1}
 <% if (rotation.textAnimation !== false) { %>
 /* Texto del slide entra escalonado hacia arriba cada vez que el frame se activa */
@@ -42,18 +42,26 @@
 <%- overrides %>
 </head>
 <body>
-<div class="stage"><% slides.forEach((slide, index) => { %><%- include('../partials/promo-frame', { slide, index, markSrc, markFilter, legacyLive }) %><% }) %></div>
+<div class="stage"><% slides.forEach((slide, index) => { %><%- include('../partials/promo-frame', { slide, index, markSrc, markFilter, legacyLive, version, stage }) %><% }) %></div>
 <script>
 (() => {
   const frames = document.querySelectorAll('.frame');
   if (!frames.length) return;
+  // Paquetes HTML: avisa al iframe cuando su slide entra, para que pueda
+  // reiniciar sus animaciones (window.addEventListener('message', ...)).
+  const notify = (frame) => {
+    const pkg = frame.querySelector('iframe');
+    if (pkg && pkg.contentWindow) pkg.contentWindow.postMessage({ type: 'gesha:slide-active' }, '*');
+  };
   frames[0].classList.add('active');
+  notify(frames[0]);
   if (frames.length < 2) return;
   let i = 0;
   setInterval(() => {
     frames[i].classList.remove('active');
     i = (i + 1) % frames.length;
     frames[i].classList.add('active');
+    notify(frames[i]);
   }, <%= rotation.secondsPerSlide * 1000 %>);
 })();
 </script>

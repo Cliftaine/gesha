@@ -1,0 +1,40 @@
+<!doctype html>
+<!--
+  Plantilla de promoción para Gesha (1080×1920, vertical).
+  Campos editables desde el panel:
+    {{clave}}               texto
+    {{clave|valor}}         texto con valor por defecto
+    {{img:clave|archivo}}   imagen (default = archivo dentro del paquete)
+  Las rutas relativas (style.css, img/…) se resuelven dentro del paquete.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>Promo</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<main class="promo" style="background-image: url('{{img:foto|img/fondo.svg}}')">
+  <div class="velo"></div>
+  <section class="texto">
+    <p class="etiqueta">{{etiqueta|Solo esta semana}}</p>
+    <h1 class="precio">{{precio|$79}}</h1>
+    <h2 class="nombre">{{nombre|Combo Mañanero}}</h2>
+    <p class="descripcion">{{descripcion|Café americano o latte + concha del día.}}</p>
+    <p class="vigencia">{{vigencia|Válido únicamente en tienda}}</p>
+  </section>
+</main>
+<script>
+  // Opcional: el carrusel avisa cuando este slide entra en pantalla, útil
+  // para reiniciar animaciones.
+  addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'gesha:slide-active') {
+      const t = document.querySelector('.texto');
+      t.classList.remove('entra');
+      void t.offsetWidth;
+      t.classList.add('entra');
+    }
+  });
+</script>
+</body>
+</html>

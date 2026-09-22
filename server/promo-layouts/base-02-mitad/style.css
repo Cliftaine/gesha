@@ -1,0 +1,40 @@
+/* ── Base común de los diseños incluidos (1080×1920) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:120px;width:auto;max-width:340px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:72px;left:80px}
+[data-logo="arriba-centro"] .logo{top:72px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:72px;right:80px}
+[data-logo="abajo-izquierda"] .logo{bottom:140px;left:80px}
+[data-logo="abajo-centro"] .logo{bottom:140px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:140px;right:80px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ── 02 · Mitad y sello: Foto arriba, panel crema abajo y el precio en un sello redondo. ── */
+.slide{background:#f4efe6}
+.foto{height:1080px}
+.velo{height:1080px;background:linear-gradient(to bottom,rgba(20,18,15,.35) 0%,transparent 35%)}
+.texto{position:absolute;left:0;right:0;top:1080px;bottom:0;padding:210px 100px 0;text-align:center;color:#2a2620}
+.precio{position:absolute;top:-170px;left:50%;translate:-50% 0;width:340px;height:340px;border-radius:50%;background:#7a5a3c;color:#f4efe6;border:10px solid #f4efe6;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:118px;line-height:1;box-shadow:0 18px 40px rgba(42,38,32,.28)}
+.slogan{font-size:21px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:#986a4c;margin-bottom:18px}
+.titulo{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:96px;line-height:1;letter-spacing:-.01em}
+.contiene{margin:34px auto 0;max-width:720px;font-size:34px;line-height:1.35;color:#5d554b}
+.contiene li{padding:13px 0;border-top:1px solid rgba(122,90,60,.25)}
+.contiene li:last-child{border-bottom:1px solid rgba(122,90,60,.25)}
+.tyc{position:absolute;left:100px;right:100px;bottom:70px;text-align:center;font-size:21px;line-height:1.5;color:#8a8074}
+[data-logo^="abajo"] .logo{bottom:150px}

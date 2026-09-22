@@ -1,0 +1,14 @@
+{
+  "name": "07 · Columna lateral",
+  "description": "Columna oscura a la izquierda con el texto y la foto a la derecha.",
+  "labels": {
+    "foto": "Imagen",
+    "titulo": "Título",
+    "precio": "Precio",
+    "slogan": "Slogan / promocional",
+    "contiene": "Lo que contiene (uno por línea)",
+    "tyc": "Términos y condiciones",
+    "logo": "Logo",
+    "logo_pos": "Posición del logo"
+  }
+}

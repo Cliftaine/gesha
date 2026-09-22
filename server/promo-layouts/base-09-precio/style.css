@@ -1,0 +1,40 @@
+/* ── Base común de los diseños incluidos (1080×1920) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:120px;width:auto;max-width:340px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:72px;left:80px}
+[data-logo="arriba-centro"] .logo{top:72px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:72px;right:80px}
+[data-logo="abajo-izquierda"] .logo{bottom:140px;left:80px}
+[data-logo="abajo-centro"] .logo{bottom:140px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:140px;right:80px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ── 09 · Precio protagonista: Fondo oscuro, precio enorme arriba y la foto en un arco abajo. ── */
+.slide{background:#14120f}
+.foto{inset:auto;left:110px;right:110px;bottom:0;top:1010px;width:860px;height:910px;border-radius:430px 430px 0 0}
+.velo{background:linear-gradient(to top,rgba(20,18,15,.9) 0%,transparent 22%)}
+.texto{position:absolute;left:80px;right:80px;top:250px;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f3ede3}
+.slogan{font-size:22px;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:#c08a5e}
+.precio{order:2;font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;font-size:340px;line-height:.95;letter-spacing:-.03em;margin-top:6px}
+.titulo{order:3;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:400;font-size:74px;line-height:1.05}
+.contiene{order:4;margin-top:26px;font-size:31px;letter-spacing:.04em;color:rgba(243,237,227,.8)}
+.contiene li{display:inline}
+.contiene li + li::before{content:'  ·  ';color:#c08a5e}
+.tyc{position:absolute;left:120px;right:120px;bottom:70px;text-align:center;font-size:20px;letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.75)}
+[data-logo^="abajo"] .logo{bottom:170px}

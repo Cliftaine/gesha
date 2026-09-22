@@ -27,9 +27,9 @@
     },
     {
       "id": "combo-mananero",
-      "enabled": true,
+      "enabled": false,
       "kicker": "De 7 a 11 am",
-      "headline": "$79",
+      "headline": "$100",
       "headlineSize": 168,
       "subtitle": "Combo Mañanero",
       "description": "Café americano o latte + concha del día.",
@@ -50,7 +50,7 @@
     },
     {
       "id": "hora-manta",
-      "enabled": true,
+      "enabled": false,
       "kicker": "De 4 a 6 pm",
       "headline": "−20%",
       "headlineSize": 168,
@@ -71,7 +71,7 @@
     },
     {
       "id": "club-manta",
-      "enabled": true,
+      "enabled": false,
       "kicker": "Club Manta",
       "headline": "Va por la casa",
       "headlineSize": 84,
@@ -89,6 +89,40 @@
       "tags": [],
       "priority": 20,
       "sucursales": null
+    },
+    {
+      "id": "promo-7vrbr",
+      "enabled": true,
+      "kicker": "Nueva promo",
+      "headline": "$0",
+      "headlineSize": 168,
+      "subtitle": "",
+      "description": "",
+      "footnote": "",
+      "image": "",
+      "rules": {
+        "days": [
+          "tue",
+          "wed",
+          "mon",
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "from": "02:25",
+        "to": "13:25",
+        "dateFrom": null,
+        "dateTo": null
+      },
+      "tags": [],
+      "priority": 50,
+      "sucursales": null,
+      "package": "base-01-clasico",
+      "values": {
+        "precio": "$0",
+        "slogan": "Nueva promo"
+      }
     }
   ],
   "weather": {
@@ -124,11 +158,11 @@
     },
     "promoDelDia": {
       "enabled": true,
-      "priority": 80
+      "priority": 70
     }
   },
   "rotation": {
-    "secondsPerSlide": 12,
+    "secondsPerSlide": 10,
     "transitionMs": 900,
     "maxSlides": 6,
     "isotipo": "02",

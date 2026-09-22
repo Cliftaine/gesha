@@ -5,6 +5,7 @@ const path = require('path');
 const store = require('../lib/store');
 const { resolveCarta, getScreen } = require('../lib/dispatch');
 const { renderCarta, cartaIds, canvasFor } = require('../lib/render');
+const promoPackages = require('../lib/promo-packages');
 
 // Rotación de la pantalla en grados (0/90/180/270). Compat con el formato
 // viejo ('portrait'/'cw'/'ccw').
@@ -38,12 +39,57 @@ router.get('/carta/:cartaId', async (req, res, next) => {
       sucursal: req.query.sucursal || null,
       tempOverride: DEV && req.query.temp !== undefined ? Number(req.query.temp) : null,
       editMode: req.query.edit === '1',
+      baseRes: req.query.res === 'base',
     });
-    res.type('html').send(html);
+    // Carta abierta directo en una pantalla (sin el player): sin cursor. Se
+    // inyecta aquí y no en el template, que se conserva idéntico al original;
+    // el editor visual del panel (?edit=1) sí necesita el puntero.
+    const kiosk = req.query.edit === '1'
+      ? html
+      : html.replace('</head>', '<style data-kiosk>html,body,body *{cursor:none !important}</style>\n</head>');
+    res.type('html').send(kiosk);
   } catch (err) {
     next(err);
   }
 });
+
+// ── Paquetes HTML de promociones ───────────────────────────────────────────
+// /promo-pkg/<id>/?promo=<promoId> → index.html con los placeholders resueltos
+// (valores de la promo o defaults). El resto del paquete se sirve estático.
+// El carrusel lo embebe en un iframe sandbox (sin same-origin), por eso CORS
+// abierto: las fuentes y módulos del paquete deben poder cargarse.
+function sendPackageIndex(req, res) {
+  const promos = store.getSafe('data/promos.json', { promos: [] }).promos || [];
+  const promo = promos.find((p) => p.id === req.query.promo && [p.package, p.packageH].includes(req.params.pkgId));
+  // ?pv=<json>: valores aún sin guardar (vista previa del panel). Solo texto:
+  // render() los escapa igual que a los guardados.
+  let values = promo?.values || {};
+  if (req.query.pv) {
+    try {
+      const pv = JSON.parse(req.query.pv);
+      if (pv && typeof pv === 'object') values = pv;
+    } catch { /* se ignora */ }
+  }
+  const html = promoPackages.render(req.params.pkgId, values);
+  if (html == null) return res.status(404).send('Paquete desconocido');
+  // CSP sandbox: aun abierto directo (links "ver" del panel), el HTML subido
+  // corre en un origen opaco y no puede llamar a /api con la sesión del panel.
+  res.set('Content-Security-Policy', 'sandbox allow-scripts');
+  res.set('Cache-Control', 'no-store').type('html').send(html);
+}
+router.get('/promo-pkg/:pkgId/', sendPackageIndex);
+router.get('/promo-pkg/:pkgId/index.html', sendPackageIndex);
+router.use('/promo-pkg', express.static(promoPackages.ROOT, {
+  index: false,
+  dotfiles: 'deny',
+  setHeaders: (res) => res.set('Access-Control-Allow-Origin', '*'),
+}));
+router.use('/promo-pkg', express.static(promoPackages.BUILTIN_ROOT, {
+  index: false,
+  dotfiles: 'deny',
+  setHeaders: (res) => res.set('Access-Control-Allow-Origin', '*'),
+}));
+router.use('/promo-pkg', (req, res) => res.status(404).send('No encontrado'));
 
 // ── Referencia de fidelidad: originales intactos + onion-skin ─────────────
 router.use('/reference', express.static(path.join(__dirname, '..', '..', 'cartas-html')));

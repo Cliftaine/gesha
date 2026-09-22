@@ -1,0 +1,16 @@
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#14120f}
+.promo{position:relative;width:1080px;height:1920px;overflow:hidden;background-size:cover;background-position:center;color:#f3ede3;font-family:Georgia,'Times New Roman',serif}
+.velo{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,15,.9) 0%,rgba(20,18,15,.2) 55%,rgba(20,18,15,.35) 100%)}
+.texto{position:absolute;left:84px;right:84px;bottom:134px}
+.texto.entra > *{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.texto.entra > *:nth-child(2){animation-delay:.15s}
+.texto.entra > *:nth-child(3){animation-delay:.3s}
+.texto.entra > *:nth-child(4){animation-delay:.45s}
+.texto.entra > *:nth-child(5){animation-delay:.6s}
+@keyframes sube{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.etiqueta{margin:0 0 20px;font:600 21px/1 system-ui,sans-serif;letter-spacing:.34em;text-transform:uppercase;color:#c08a5e}
+.precio{margin:0;font-weight:300;font-size:190px;line-height:.9;letter-spacing:-.02em}
+.nombre{margin:12px 0 18px;font-weight:400;font-style:italic;font-size:60px;line-height:1.04}
+.descripcion{margin:0;max-width:640px;font:400 26px/1.45 system-ui,sans-serif;color:rgba(243,237,227,.85)}
+.vigencia{margin:26px 0 0;font:400 16px/1 system-ui,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:rgba(243,237,227,.6)}

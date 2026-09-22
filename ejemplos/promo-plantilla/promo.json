@@ -1,0 +1,11 @@
+{
+  "name": "Promo ejemplo",
+  "labels": {
+    "etiqueta": "Etiqueta superior",
+    "precio": "Precio",
+    "nombre": "Nombre del producto",
+    "descripcion": "Descripción breve",
+    "vigencia": "Vigencia / nota al pie",
+    "foto": "Foto de fondo"
+  }
+}

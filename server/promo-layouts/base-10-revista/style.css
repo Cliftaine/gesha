@@ -1,0 +1,39 @@
+/* ── Base común de los diseños incluidos (1080×1920) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:120px;width:auto;max-width:340px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:72px;left:80px}
+[data-logo="arriba-centro"] .logo{top:72px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:72px;right:80px}
+[data-logo="abajo-izquierda"] .logo{bottom:140px;left:80px}
+[data-logo="abajo-centro"] .logo{bottom:140px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:140px;right:80px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ── 10 · Revista: Editorial claro: foto con margen, título serif enorme y lista a dos columnas. ── */
+.slide{background:#fbfaf7;font-family:Inter,system-ui,sans-serif}
+.foto{inset:auto;left:80px;top:80px;width:920px;height:940px}
+.texto{position:absolute;left:80px;right:80px;top:1070px;color:#141414;display:grid;grid-template-columns:1fr auto;column-gap:30px;align-items:end}
+.slogan{grid-column:1 / -1;font-size:20px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:#c43e28;padding-bottom:20px;margin-bottom:26px;border-bottom:4px solid #141414}
+.titulo{font-family:"DM Serif Display",Georgia,serif;font-weight:400;font-size:124px;line-height:.95;letter-spacing:-.02em}
+.precio{font-family:"DM Serif Display",Georgia,serif;font-size:120px;line-height:1;color:#c43e28}
+.contiene{grid-column:1 / -1;margin-top:44px;padding-top:30px;border-top:1px solid #bdbdbd;columns:2;column-gap:50px;font-size:32px;line-height:1.3;color:#3c3c3c}
+.contiene li{padding:10px 0;break-inside:avoid}
+.contiene li::before{content:'→ ';color:#c43e28}
+.tyc{position:absolute;left:80px;width:560px;bottom:84px;font-size:21px;line-height:1.5;color:#8a8a8a}
+[data-logo^="abajo"] .logo{bottom:70px;height:110px}
