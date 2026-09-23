@@ -45,6 +45,8 @@ function toSlide(p, score, orientation = 'vertical') {
     description: p.description || '',
     footnote: p.footnote || '',
     image: p.image || DEFAULT_IMAGES.promoDelDia,
+    // Encuadre de la foto en el diseño estándar ("x% y%"; el panel lo arrastra).
+    imagePos: /^\d{1,3}% \d{1,3}%$/.test(p.imagePos) ? p.imagePos : null,
     // Logo propio de esta promo en el diseño estándar (si no, el isotipo general).
     logo: typeof p.logo === 'string' && /^(\/uploads\/|\/assets\/)[^"'<>\s]+$/.test(p.logo) ? p.logo : null,
     // Diseño propio: paquete HTML subido (ver promo-packages.js).

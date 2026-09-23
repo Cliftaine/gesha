@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { apiGet, apiPut, apiDelete, debounce, uploadImage, uploadFile, ConflictError } from './api.js';
 import { MarkControls } from './MenuEditor.jsx';
-import { OptionCards, ToggleCard, UploadCard, Field } from './OptionCards.jsx';
+import { OptionCards, ToggleCard, UploadCard, Field, Framing } from './OptionCards.jsx';
 
 const DAYS = [
   ['mon', 'L'], ['tue', 'M'], ['wed', 'X'], ['thu', 'J'],
@@ -351,7 +351,7 @@ function LogoPicker({ value, defaultLabel, logos, onChange, onLibraryChange }) {
 // Campos de la plantilla de una promo: texto, lista, opciones o imagen.
 // El input muestra el valor guardado o, si no hay, el default de la plantilla;
 // vaciarlo lo oculta en el slide y ↺ vuelve al default.
-function PackageFields({ pkg, values, onChange, logos = [], onLibraryChange }) {
+function PackageFields({ pkg, values, onChange, logos = [], onLibraryChange, horizontal = false }) {
   const onImage = async (key, e) => {
     const file = e.target.files?.[0];
     e.target.value = '';
@@ -385,9 +385,9 @@ function PackageFields({ pkg, values, onChange, logos = [], onLibraryChange }) {
           );
         }
         return (
-          <label key={f.key} className={f.type === 'list' || f.type === 'image' || f.type === 'select' ? 'wide' : ''}>
-            {f.label}
-            <span className="row" style={{ gap: 6, flexWrap: 'nowrap', alignItems: 'flex-start' }}>
+          <div key={f.key} className={'fld' + (f.type === 'list' || f.type === 'image' || f.type === 'select' ? ' wide' : '')}>
+            <span>{f.label}</span>
+            <div className="fld-control" style={{ gap: 6, alignItems: 'flex-start' }}>
               {f.type === 'select' ? (
                 <OptionCards size="xs" value={f.options.includes(val) ? val : f.default} onChange={(v) => onChange(f.key, v)}
                   options={f.options.map((o) => ({
@@ -408,14 +408,18 @@ function PackageFields({ pkg, values, onChange, logos = [], onLibraryChange }) {
                 <>
                   {val && <img src={val.startsWith('/') || val.startsWith('http') ? val : `/promo-pkg/${pkg.id}/${val}`} alt=""
                     style={{ width: 44, height: 34, objectFit: 'cover', borderRadius: 6, background: '#ddd' }} />}
-                  <span className="file-btn">
+                  <label className="file-btn">
                     subir <input type="file" accept="image/png,image/jpeg,image/webp,image/avif" hidden onChange={(e) => onImage(f.key, e)} />
-                  </span>
+                  </label>
                 </>
               )}
               {reset}
-            </span>
-          </label>
+            </div>
+            {f.type === 'image' && f.framing && val && (
+              <Framing src={val.startsWith('/') || val.startsWith('http') ? val : `/promo-pkg/${pkg.id}/${val}`}
+                value={values[`${f.key}_pos`]} horizontal={horizontal} onChange={(v) => onChange(`${f.key}_pos`, v)} />
+            )}
+          </div>
         );
       })}
     </div>
@@ -564,7 +568,7 @@ function PromoCard({ p, index, total, packages = [], logos = [], onLibraryChange
 
       <span className="fld-title">Contenido</span>
       {pkg ? (
-        <PackageFields pkg={pkg} values={p.values || {}} logos={logos} onLibraryChange={onLibraryChange}
+        <PackageFields pkg={pkg} values={p.values || {}} logos={logos} onLibraryChange={onLibraryChange} horizontal={horizontal}
           onChange={(key, v) => onChange((x) => {
             x.values = x.values || {};
             if (v == null) delete x.values[key];
@@ -603,6 +607,10 @@ function PromoCard({ p, index, total, packages = [], logos = [], onLibraryChange
               </label>
             </Field>
           </div>
+          {p.image && (
+            <Framing src={p.image} value={p.imagePos} horizontal={horizontal}
+              onChange={(v) => onChange((x) => { if (v) x.imagePos = v; else delete x.imagePos; })} />
+          )}
         </>
       )}
     </div>

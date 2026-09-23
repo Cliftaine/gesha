@@ -36,7 +36,8 @@ npm start                            # http://localhost:3000
 |---|---|
 | `config/dispatch.json` | Sucursales → pantallas → reglas `{days, from, to, carta}` (primera coincidencia gana; `from > to` cruza medianoche) |
 | `config/settings.json` | Timezone, clima (override / Open-Meteo / mock), URL del servicio de comida, player |
-| `data/menus/*.json` | Contenido de las cartas (categorías, items, precios, variantes) |
+| `seed/` | Datos iniciales (`npm run seed` los copia a `data/` y `config/` solo si faltan) |
+| `data/menus/*.json` | Contenido de las cartas (categorías, items, precios, variantes) — **no está en git** |
 | `data/promos.json` | Promos estáticas + slides dinámicos + umbrales de clima + rotación |
 | `data/layouts.json` | Deltas del editor visual por zona (`{}` = diseño original intacto) |
 | `data/mock/comida-semana.json` | Comidas del día por día de semana (alimenta el mock) |
@@ -274,4 +275,6 @@ Las plantillas viven en `deploy/` (`gesha.service.tpl`, `com.mantacafe.gesha.pli
 y `make service-install` sustituye ruta del proyecto, binario de node y usuario
 automáticamente. En Linux queda habilitado con el boot (`multi-user.target`);
 en macOS arranca al iniciar sesión (`RunAtLoad` + `KeepAlive`, logs en `logs/`).
-Datos = archivos JSON (escritura atómica); respaldar `config/` y `data/`.
+Datos = archivos JSON (escritura atómica) que **no viajan por git**: `data/`,
+`config/` y `public/uploads/` se editan en cada servidor y `git pull` nunca los
+toca. Respaldar esas tres carpetas.

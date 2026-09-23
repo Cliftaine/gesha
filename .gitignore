@@ -5,3 +5,15 @@ public/uploads/*
 !public/uploads/.gitkeep
 .DS_Store
 *.tmp
+
+# Datos vivos: se editan desde el panel en cada servidor, no viajan por git.
+# Los ejemplos iniciales están en seed/ (npm run seed los copia si faltan).
+data/menus/
+data/promos.json
+data/layouts.json
+data/library.json
+data/promo-packages.json
+data/promo-packages/
+data/drafts/
+config/dispatch.json
+config/settings.json

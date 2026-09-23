@@ -24,6 +24,7 @@ UNIT_DEST   := /etc/systemd/system/gesha.service
 setup:
 	npm install
 	npm --prefix panel install
+	npm run seed
 	$(MAKE) build
 
 build: panel-build isotipos

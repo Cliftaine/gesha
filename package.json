@@ -10,7 +10,8 @@
     "panel:dev": "npm --prefix panel run dev",
     "panel:build": "npm --prefix panel run build",
     "isotipos": "node scripts/build-isotipos.js",
-    "temporada": "node scripts/build-temporada.js"
+    "temporada": "node scripts/build-temporada.js",
+    "seed": "node scripts/seed.js"
   },
   "engines": {
     "node": ">=20"

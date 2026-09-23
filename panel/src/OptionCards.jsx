@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 // Controles visuales del panel: tarjetas grandes en vez de selects/checkboxes.
 // OptionCards = elección única; ToggleCard = encendido/apagado.
@@ -63,13 +63,57 @@ export function UploadCard({ label, accept, onFile }) {
 }
 
 // Campo con etiqueta: deja claro qué se está llenando (nombre, precio, nota…).
-// El control va en una caja de alto fijo para que las etiquetas de una misma
+// Es un <div>, no un <label>: así un botón de subir archivo (que es un <label>)
+// dentro del campo sí abre el diálogo. El control va en una caja de alto fijo para que las etiquetas de una misma
 // fila queden parejas aunque un control (el icono) sea más alto que un input.
 export function Field({ label, children, grow = false, width }) {
   return (
-    <label className={'fld' + (grow ? ' grow' : '')} style={width ? { width } : undefined}>
+    <div className={'fld' + (grow ? ' grow' : '')} style={width ? { width } : undefined}>
       <span>{label}</span>
       <div className="fld-control">{children}</div>
-    </label>
+    </div>
+  );
+}
+
+// Encuadre de una imagen que se muestra recortada (object-fit: cover):
+// miniatura con la proporción de la pantalla; arrastrar mueve la foto y
+// devuelve "x% y%" (object-position). El desplazamiento se calcula con el
+// sobrante real de la imagen, así el arrastre sigue al dedo.
+export function Framing({ src, value, horizontal = false, onChange }) {
+  const box = useRef(null);
+  const img = useRef(null);
+  const parse = (v) => {
+    const m = /^(\d{1,3})% (\d{1,3})%$/.exec(v || '');
+    return m ? [Number(m[1]), Number(m[2])] : [50, 50];
+  };
+  const [x, y] = parse(value);
+  const onDown = (e) => {
+    const el = img.current, b = box.current;
+    if (!el || !b || !el.naturalWidth) return;
+    e.preventDefault();
+    const r = b.getBoundingClientRect();
+    const scale = Math.max(r.width / el.naturalWidth, r.height / el.naturalHeight);
+    const overX = el.naturalWidth * scale - r.width;
+    const overY = el.naturalHeight * scale - r.height;
+    const start = { px: e.clientX, py: e.clientY, x, y };
+    const move = (ev) => {
+      const nx = overX > 1 ? start.x - ((ev.clientX - start.px) / overX) * 100 : start.x;
+      const ny = overY > 1 ? start.y - ((ev.clientY - start.py) / overY) * 100 : start.y;
+      onChange(`${Math.round(Math.min(100, Math.max(0, nx)))}% ${Math.round(Math.min(100, Math.max(0, ny)))}%`);
+    };
+    const up = () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); };
+    addEventListener('pointermove', move);
+    addEventListener('pointerup', up);
+  };
+  return (
+    <div className="framing">
+      <div ref={box} className={'framing-box' + (horizontal ? ' h' : '')} onPointerDown={onDown} title="Arrastra la foto para encuadrarla">
+        <img ref={img} src={src} alt="" draggable="false" style={{ objectPosition: `${x}% ${y}%` }} />
+      </div>
+      <div className="framing-side">
+        <small>Encuadre: arrastra la foto</small>
+        <button type="button" className="ghost small" disabled={x === 50 && y === 50} onClick={() => onChange(null)}>↺ centrar</button>
+      </div>
+    </div>
   );
 }

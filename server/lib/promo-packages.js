@@ -6,6 +6,9 @@
 //   {{img:foto|foto.jpg}} campo de imagen (default = archivo del paquete)
 //   {{list:contiene|A;B}}  lista: una línea por elemento → <li>…</li>
 //   {{opt:logo_pos|a,b,c}} selector de opciones (la primera es el default)
+//   {{pos:foto|50% 50%}}   encuadre de la imagen `foto` (object-position /
+//                          background-position); el panel lo edita arrastrando
+//                          y lo guarda en values.foto_pos
 // Un valor vacío explícito ("") se respeta: deja el hueco vacío (los diseños
 // ocultan lo vacío con :empty); sin valor ⇒ default del paquete.
 // Además de los subidos hay diseños INCLUIDOS en server/promo-layouts/<id>/
@@ -28,7 +31,8 @@ const ALLOWED_EXT = new Set([
   '.woff', '.woff2', '.ttf', '.otf', '.mp4', '.webm',
 ]);
 
-const PLACEHOLDER = /\{\{\s*(img:|list:|opt:)?([a-zA-Z0-9_-]+)\s*(?:\|([^}]*))?\}\}/g;
+const PLACEHOLDER = /\{\{\s*(img:|list:|opt:|pos:)?([a-zA-Z0-9_-]+)\s*(?:\|([^}]*))?\}\}/g;
+const POS = /^\d{1,3}% \d{1,3}%$/;
 
 function index() {
   const idx = store.getSafe(INDEX, null);
@@ -134,9 +138,11 @@ function normalizeEntries(entries) {
 // index.html → [{ key, type: 'text'|'image', default, label }]
 function scanFields(html, labels = {}) {
   const fields = new Map();
+  const framed = new Set(); // imágenes con {{pos:…}} → encuadre editable
   // Los comentarios HTML no cuentan (suelen documentar la sintaxis).
   for (const m of html.replace(/<!--[\s\S]*?-->/g, '').matchAll(PLACEHOLDER)) {
     const key = m[2];
+    if (m[1] === 'pos:') { framed.add(key); continue; }
     const def = (m[3] || '').trim();
     const prev = fields.get(key);
     if (prev) {
@@ -151,6 +157,7 @@ function scanFields(html, labels = {}) {
     }
     fields.set(key, field);
   }
+  for (const key of framed) if (fields.get(key)?.type === 'image') fields.get(key).framing = true;
   return [...fields.values()];
 }
 
@@ -243,6 +250,10 @@ function render(id, values = {}) {
   const html = fs.readFileSync(file, 'utf8');
   return html.replace(PLACEHOLDER, (_, kind, key, def) => {
     const fallback = (def || '').trim();
+    if (kind === 'pos:') {
+      const pos = values[`${key}_pos`];
+      return POS.test(pos) ? pos : (POS.test(fallback) ? fallback : '50% 50%');
+    }
     const v = typeof values[key] === 'string' ? values[key] : null;
     if (kind === 'opt:') {
       const options = fallback.split(',').map((o) => o.trim()).filter(Boolean);

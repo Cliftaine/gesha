@@ -201,7 +201,7 @@ td input[type="text"] { width: 100%; }
   border: 1px solid var(--rust); border-radius: 999px; padding: 1px 8px;
 }
 .pkg-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; margin-top: 8px; }
-.pkg-fields label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); }
+.pkg-fields > .fld { display: flex; flex-direction: column; gap: 3px; }
 .pkg-fields input[type="text"] { width: 100%; }
 .pkg-row { border-top: 1px solid var(--accent-soft); padding: 8px 0; }
 .seg { display: inline-flex; border: 1px solid var(--accent-soft); border-radius: 10px; overflow: hidden; }
@@ -560,7 +560,7 @@ td .opt-cards.mini { flex-wrap: nowrap; }
 /* Botones sueltos dentro de una fila de campos: a la altura del control */
 .fields > button { margin-top: 27px; }
 .fld { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.fld > span, .fld-title { font-size: 10.5px; line-height: 13px; height: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.fld > span:first-child, .fld-title { font-size: 10.5px; line-height: 13px; height: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 .fld-title { display: block; margin: 4px 0 5px; }
 .fld input[type="text"], .fld input[type="number"] { width: 100%; }
 .fld input[type="number"] { text-align: right; }
@@ -591,3 +591,12 @@ td .opt-cards.mini { flex-wrap: nowrap; }
 .design-group.inactive:hover .design-strip { opacity: 0.5; }
 
 .pkg-logo .fld-title { margin-top: 2px; }
+
+/* Encuadre arrastrable de imágenes */
+.framing { display: flex; align-items: flex-end; gap: 10px; margin-top: 6px; }
+.framing-box { width: 108px; height: 192px; border-radius: 8px; overflow: hidden; border: 2px solid var(--accent-soft); background: #ddd; cursor: grab; touch-action: none; user-select: none; }
+.framing-box.h { width: 192px; height: 108px; }
+.framing-box:active { cursor: grabbing; border-color: var(--accent); }
+.framing-box img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.framing-side { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.framing-side small { font-size: 11px; color: var(--muted); }
