@@ -345,14 +345,21 @@ const RUNTIME = `<script data-gesha-runtime>
 // (sin marcos, curvas ni giros del layout). Las TVs lo pintan en un plano
 // propio que se estira a la caja del <video>: si la caja no tiene la
 // proporción de la pantalla, el video se deforma. La rotación la trae el
-// propio archivo.
+// propio archivo. <html> recibe la clase gesha-video para que cada diseño
+// ajuste lo que va encima (p. ej. Pumpkin cambia su curva por una máscara).
 const VIDEO_BACKGROUND = `<style data-gesha-video>
 video[data-gesha]{position:absolute !important;inset:0 !important;top:0 !important;left:0 !important;width:100% !important;height:100% !important;margin:0 !important;z-index:0 !important;object-fit:cover !important;object-position:50% 50% !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;clip-path:none !important;transform:none !important;rotate:none !important;scale:none !important;translate:none !important;filter:none !important;animation:none !important}
-</style>`;
+</style>
+<script>document.documentElement.classList.add('gesha-video');</script>`;
 
 function injectRuntime(html, withVideo) {
-  // Con video: fondo a pantalla completa y helper de canvas (gesha:video-canvas).
-  const runtime = (withVideo ? VIDEO_BACKGROUND + '\n<script src="/video-canvas.js"></script>\n' : '') + RUNTIME;
+  // Con video: fondo a pantalla completa (en <head>, antes del primer pintado)
+  // y helper de canvas (gesha:video-canvas).
+  if (withVideo) {
+    const head = html.indexOf('</head>');
+    html = head === -1 ? VIDEO_BACKGROUND + html : html.slice(0, head) + VIDEO_BACKGROUND + '\n' + html.slice(head);
+  }
+  const runtime = (withVideo ? '<script src="/video-canvas.js"></script>\n' : '') + RUNTIME;
   const at = html.lastIndexOf('</body>');
   return at === -1 ? html + runtime : html.slice(0, at) + runtime + '\n' + html.slice(at);
 }

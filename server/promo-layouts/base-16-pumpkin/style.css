@@ -26,17 +26,21 @@ html,body{background:#14120f}
 @keyframes sube{from{opacity:0;transform:translateY(68px)}to{opacity:1;transform:none}}
 
 /* ── 16 · Pumpkin Spice: foto con espuma que sube, hojas que caen y precio latiendo en una píldora calabaza. ── */
-.slide{background:radial-gradient(120% 60% at 50% 100%,#3d2316 0%,#2a1810 60%);font-family:"Alegreya Sans",system-ui,sans-serif}
-/* Parte baja café con la curva, dibujada encima de la foto: con video, este
-   va de fondo a pantalla completa (ver promo-packages.js) y la TV ignora
-   border-radius, así que el recorte del .foto no basta. Esquinas: mismo óvalo
-   que el border-radius (1080×300); debajo, el mismo degradado del .slide. */
-.slide::after{content:'';position:absolute;left:0;right:0;top:1940px;bottom:0;z-index:1;pointer-events:none;background:radial-gradient(1080px 300px at 100% 0,transparent 99.4%,#2a1810 100%) left top / 50% 301px no-repeat,radial-gradient(1080px 300px at 0 0,transparent 99.4%,#2a1810 100%) right top / 50% 301px no-repeat,radial-gradient(2592px 2304px at 50% 100%,#3d2316 0%,#2a1810 60%) left 300px / 100% calc(100% - 300px) no-repeat}
-.velo{inset:auto;top:0;left:0;width:100%;height:2240px;border-radius:0 0 50% 50% / 0 0 300px 300px;background:linear-gradient(to bottom,rgba(42,24,16,.55) 0%,rgba(42,24,16,0) 26%,rgba(224,123,42,.08) 70%,rgba(42,24,16,.7) 100%)}
+/* Fondo morado con puntos naranjas, como la carta de Día de Muertos */
+.slide{background:radial-gradient(circle,rgba(245,154,27,.16) 0 10px,transparent 12px) 0 0 / 140px 140px,radial-gradient(120% 60% at 50% 100%,#3a1646 0%,#220c2c 60%,#15071c 100%);font-family:"Alegreya Sans",system-ui,sans-serif}
+.foto{inset:auto;top:0;left:0;width:100%;height:2240px;border-radius:0 0 50% 50% / 0 0 300px 300px}
+.velo{inset:auto;top:0;left:0;width:100%;height:2240px;border-radius:0 0 50% 50% / 0 0 300px 300px;background:linear-gradient(to bottom,rgba(34,12,44,.55) 0%,rgba(34,12,44,0) 26%,rgba(224,123,42,.08) 70%,rgba(34,12,44,.7) 100%)}
+/* Con video (html.gesha-video, ver promo-packages.js): el video va de fondo a
+   pantalla completa y la TV no lo recorta con border-radius, así que no hay
+   curva: una sola máscara degradada sobre todo el video que se vuelve morado
+   sólido donde empiezan los textos, y los puntos solo en esa parte baja. */
+.gesha-video .velo{inset:0;width:auto;height:auto;border-radius:0;background:linear-gradient(to bottom,rgba(34,12,44,.45) 0%,rgba(34,12,44,0) 16%,rgba(34,12,44,0) 30%,rgba(34,12,44,.75) 44%,#220c2c 52%,#1c0a25 100%)}
+.gesha-video .slide::after{content:'';position:absolute;left:0;right:0;top:2000px;bottom:0;z-index:1;pointer-events:none;background:radial-gradient(circle,rgba(245,154,27,.16) 0 10px,transparent 12px) 0 0 / 140px 140px}
+.gesha-video .espuma{border-radius:0}
 .texto{position:absolute;left:160px;right:160px;top:2060px;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f6e7d3}
-.slogan{font-size:calc(48px * var(--s-slogan,1));font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#2a1810;background:#f6e7d3;padding:32px 68px 32px calc(68px + .42em);border-radius:1998px}
+.slogan{font-size:calc(48px * var(--s-slogan,1));font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#220c2c;background:#f6e7d3;padding:32px 68px 32px calc(68px + .42em);border-radius:1998px}
 .titulo{margin-top:80px;font-family:Alegreya,Georgia,serif;font-style:italic;font-weight:700;font-size:calc(216px * var(--s-titulo,1));line-height:1.02;text-wrap:balance;background:linear-gradient(100deg,#f6e7d3 42%,#ffd9a8 50%,#f6e7d3 58%) 100% 0/300% 100% no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent}
-.precio{margin-top:88px;font-family:Alegreya,Georgia,serif;font-weight:800;font-size:calc(340px * var(--s-precio,1));line-height:1;color:#2a1810;background:#e07b2a;padding:44px 150px 56px;border-radius:1998px;box-shadow:0 0 0 20px rgba(224,123,42,.25),0 48px 120px rgba(0,0,0,.35)}
+.precio{margin-top:88px;font-family:Alegreya,Georgia,serif;font-weight:800;font-size:calc(340px * var(--s-precio,1));line-height:1;color:#220c2c;background:#e07b2a;padding:44px 150px 56px;border-radius:1998px;box-shadow:0 0 0 20px rgba(224,123,42,.25),0 48px 120px rgba(0,0,0,.35)}
 .contiene{margin-top:92px;font-size:calc(64px * var(--s-contiene,1));font-weight:500;line-height:1.5;color:#f6e7d3}
 .contiene li + li{color:rgba(246,231,211,.7)}
 .tyc{position:absolute;left:180px;right:180px;bottom:192px;text-align:center;font-size:calc(34px * var(--s-tyc,1));letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:rgba(246,231,211,.55)}
