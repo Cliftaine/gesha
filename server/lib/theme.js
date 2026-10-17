@@ -206,16 +206,11 @@ const TEMPLATES = {
     roleFonts: { title: 'rye' },
     dark: true,
     // Ilustraciones en public/assets/temporada (npm run temporada): papel
-    // picado calado con calaveras, pétalos de cempasúchil cayendo detrás del
+    // picado calado con la manta, pétalos de cempasúchil cayendo detrás del
     // contenido y, abajo, calaverita de azúcar, pan de muerto y cempasúchil.
-    // La manta cuelga del banderín central del papel picado (liso, sin
-    // calavera) como si estuviera calada en el papel; sin isotipos laterales.
+    // Cada banderín lleva la manta calada, así que van sin isotipos laterales.
     css: DARK + HANGING('papel-picado-muertos.svg', 864) + `
-[data-zone="title"]::before{content:'';position:absolute;left:50%;top:0;width:172.8px;height:140.8px;translate:-50% 0;background:url(${ART}/papel-picado-centro.svg) 0 0 / 100% 100% no-repeat;z-index:4;pointer-events:none}
-[data-t="mark-r"]{display:none !important}
-[data-t="mark-l"]{left:50% !important;top:24px !important;height:88px !important;translate:-50% 0;z-index:5;filter:brightness(0) !important;opacity:.95}
-[data-t="canvas"][style*="width: 1920px"] [data-zone="title"]::before{width:124.4px;height:101.4px}
-[data-t="canvas"][style*="width: 1920px"] [data-t="mark-l"]{top:17px !important;height:64px !important}
+[data-t^="mark"]{display:none !important}
 [data-t="frame"]{inset:-840px 0 0 0 !important;border:0 !important;z-index:-1;opacity:.2;background:url(${ART}/petalos.svg) 0 0 / 560px 840px;animation:fxCaer 46s linear infinite;will-change:transform}
 @keyframes fxCaer{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,840px,0)}}
 [data-t="canvas"]::after{content:'';position:absolute;left:0;right:0;bottom:8px;height:106px;z-index:3;pointer-events:none;background:

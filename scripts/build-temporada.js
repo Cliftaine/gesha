@@ -184,8 +184,25 @@ const MOTIFS = {
   // Sin motivo central: banderín liso para montar encima el isotipo.
   liso: '',
   estrella: `<path d="M108 42 L118 72 L150 72 L124 91 L134 122 L108 103 L82 122 L92 91 L66 72 L98 72Z" fill="#000"/><circle cx="108" cy="86" r="7" fill="#fff"/>`,
+  // Isotipo de la manta calado: la silueta (path #manta, ver MANTA_DEF) es
+  // hueco; sus detalles internos quedan como papel.
+  manta: (() => {
+    const k = 0.4; // 252 de alto en el isotipo → ~100 en el banderín
+    return `<use href="#manta" transform="translate(${(108 - 300 * k).toFixed(1)} ${(80 - 300 * k).toFixed(1)}) scale(${k})" fill="#000"/>`;
+  })(),
   sol: `<g transform="translate(108 84)">${Array.from({ length: 12 }, (_, i) => `<path transform="rotate(${i * 30})" d="M-6 -22 L0 -42 L6 -22Z" fill="#000"/>`).join('')}<circle r="18" fill="#000"/><circle r="8" fill="#fff"/></g>`,
 };
+// Silueta del isotipo (manta-mesa1.svg: un solo color, viewBox 183 174 234
+// 252, centro en 300,300). Se define una vez y cada banderín la reusa.
+const MANTA_DEF = (() => {
+  const iso = fs.readFileSync(path.join(__dirname, '..', 'public', 'assets', 'isotipos', 'manta-mesa1.svg'), 'utf8');
+  const d = (iso.match(/\sd="([^"]{1000,})"/) || [])[1];
+  if (!d) throw new Error('manta-mesa1.svg: no encontré la silueta (corre npm run isotipos)');
+  // 1 decimal basta a este tamaño y reduce el archivo a la mitad. Cada número
+  // lleva espacio delante: en "1.2.04" el redondeo podría pegarlos.
+  const slim = d.replace(/\s+/g, ' ').replace(/-?\d*\.\d+/g, (n) => ' ' + Math.round(Number(n) * 10) / 10);
+  return `<path id="manta" d="${slim}"/>`;
+})();
 function flagMask(id, motif) {
   let holes = '';
   for (let x = 18; x <= FLAG_W - 18; x += 20) holes += `<circle cx="${x}" cy="22" r="5.5" fill="#000"/>`; // cenefa superior
@@ -204,6 +221,7 @@ function flagShape() {
 function papelPicado(colors, motifs, stroke = null) {
   const n = colors.length;
   let defs = '', flags = '';
+  if (motifs.includes('manta')) defs += MANTA_DEF;
   motifs.forEach((m, i) => { defs += flagMask(`m${i}`, m); });
   colors.forEach((c, i) => {
     const mi = i % motifs.length;
@@ -218,12 +236,8 @@ ${flags}`);
 }
 write('papel-picado-muertos.svg', papelPicado(
   ['#e23d8a', '#f59a1b', '#31b7a5', '#f4d35e', '#8e5bd0'],
-  ['calavera', 'flor', 'calavera', 'sol', 'calavera'],
+  ['manta'],
 ));
-// Banderín central (mismo color, forma y caída que el 3.º del mosaico, que
-// cae justo al centro del canvas): sin calavera, para colgar ahí la manta.
-write('papel-picado-centro.svg', svg(FLAG_W, FLAG_H + 26, `<defs>${flagMask('m0', 'liso')}</defs>
-<path d="${flagShape()}" fill="#31b7a5" mask="url(#m0)"/>`));
 // ── Pétalos de cempasúchil cayendo (mosaico) ────────────────────────────────
 function petalos() {
   const r = rng(21);

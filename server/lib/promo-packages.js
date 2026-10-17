@@ -283,7 +283,7 @@ function render(id, values = {}) {
     if (kind === 'img:' && isVideo(v != null ? v : fallback)) videos.add(value);
     return value;
   });
-  return injectRuntime(videosInPlace(out, videos));
+  return injectRuntime(videosInPlace(out, videos), videos.size > 0);
 }
 
 // Un campo img: con un .mp4/.webm convierte su <img> en <video>, conservando
@@ -308,6 +308,8 @@ function videosInPlace(html, videos) {
 //  - Reporta la duración del video (gesha:duration) para que el slide dure
 //    al menos un ciclo completo.
 //  - Abierto directo (sin carrusel), el video arranca solo.
+//  - gesha:video-canvas pinta los videos en canvas (TV girada, ver
+//    public/video-canvas.js).
 const RUNTIME = `<script data-gesha-runtime>
 (function () {
   var css = document.createElement('style');
@@ -329,6 +331,8 @@ const RUNTIME = `<script data-gesha-runtime>
       document.documentElement.classList.remove('gesha-off');
       vids().forEach(play);
       report();
+    } else if (t === 'gesha:video-canvas' && window.geshaVideoCanvas) {
+      vids().forEach(window.geshaVideoCanvas);
     } else if (t === 'gesha:slide-inactive') {
       document.documentElement.classList.add('gesha-off');
       vids().forEach(function (v) { v.pause(); });
@@ -337,9 +341,11 @@ const RUNTIME = `<script data-gesha-runtime>
 })();
 </script>`;
 
-function injectRuntime(html) {
+function injectRuntime(html, withVideo) {
+  // Con video: helper para pintarlo en canvas en TVs giradas (gesha:video-canvas).
+  const runtime = (withVideo ? '<script src="/video-canvas.js"></script>\n' : '') + RUNTIME;
   const at = html.lastIndexOf('</body>');
-  return at === -1 ? html + RUNTIME : html.slice(0, at) + RUNTIME + '\n' + html.slice(at);
+  return at === -1 ? html + runtime : html.slice(0, at) + runtime + '\n' + html.slice(at);
 }
 
 module.exports = { ROOT, BUILTIN_ROOT, SIZES, setSize, orientationOf, list, get, install, remove, render, scanFields };

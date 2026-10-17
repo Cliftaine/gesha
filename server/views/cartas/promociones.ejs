@@ -48,6 +48,7 @@
 </head>
 <body>
 <div class="stage"><% slides.forEach((slide, index) => { %><%- include('../partials/promo-frame', { slide, index, markSrc, markFilter, legacyLive, version, stage }) %><% }) %></div>
+<% if (slides.some((s) => s.media === 'video' || s.package)) { %><script src="/video-canvas.js"></script><% } %>
 <script>
 (() => {
   const frames = Array.from(document.querySelectorAll('.frame'));
@@ -57,6 +58,10 @@
   const MAX_SECONDS = 120; // tope de seguridad para videos largos
   const durations = new Map(); // frame → duración de su video (s)
   let i = 0;
+  // TV con la pantalla girada desde el player (?rot=): el video se pinta en
+  // canvas para que gire con la página (ver /video-canvas.js).
+  const rot = Number((/[?&]rot=(\d+)/.exec(location.search) || [])[1]) || 0;
+  const canvasVideo = !!(window.geshaNeedsVideoCanvas && window.geshaNeedsVideoCanvas(rot));
 
   // Paquetes HTML: el iframe recibe gesha:slide-active / gesha:slide-inactive
   // (reinicia o pausa animaciones y video) y responde gesha:duration.
@@ -91,6 +96,7 @@
 
   frames.forEach((frame) => {
     const video = videoOf(frame);
+    if (video && canvasVideo) window.geshaVideoCanvas(video);
     if (video) {
       const known = () => { if (isFinite(video.duration)) durations.set(frame, video.duration); };
       video.addEventListener('loadedmetadata', known);
@@ -100,6 +106,7 @@
     const pkg = pkgOf(frame);
     if (pkg) {
       pkg.addEventListener('load', () => {
+        if (canvasVideo) post(frame, 'gesha:video-canvas');
         post(frame, frame.classList.contains('active') ? 'gesha:slide-active' : 'gesha:slide-inactive');
       });
     }

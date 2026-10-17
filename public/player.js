@@ -14,6 +14,8 @@
   let rotation = Number(body.dataset.rotation) || 0; // 0 | 90 | 180 | 270
   let canvas = { w: 1080, h: 1920 }; // dimensiones de la carta (llega en resolve/SSE)
   const status = document.getElementById('status');
+  // ?vc=1 / ?vc=0 en la URL del player fuerza o apaga el video en canvas.
+  const VC = (/[?&]vc=[01]/.exec(location.search) || [''])[0].replace('?', '&');
 
   // ── Centrado + scale-to-fit con rotación y canvas dinámico ──────────────
   // La carta puede ser vertical (1080×1920) u horizontal (1920×1080), y la
@@ -39,6 +41,9 @@
     if ([0, 90, 180, 270].includes(rot) && rot !== rotation) {
       rotation = rot;
       changed = true;
+      // La carta recibe la rotación en su URL (videos en TV, ver
+      // video-canvas.js): se fuerza a recargarla.
+      current = { carta: null, version: null };
     }
     if (cv && cv.w && (cv.w !== canvas.w || cv.h !== canvas.h)) {
       canvas = cv;
@@ -52,7 +57,7 @@
     if (carta === current.carta && version === current.version) return;
     current = { carta, version };
     const next = frames[1 - active];
-    const src = `/carta/${carta}?sucursal=${encodeURIComponent(SUCURSAL)}&pantalla=${encodeURIComponent(PANTALLA)}&v=${version}`;
+    const src = `/carta/${carta}?sucursal=${encodeURIComponent(SUCURSAL)}&pantalla=${encodeURIComponent(PANTALLA)}&v=${version}&rot=${rotation}${VC}`;
     next.addEventListener('load', function onload() {
       next.removeEventListener('load', onload);
       next.classList.remove('hidden');
