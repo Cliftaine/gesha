@@ -341,9 +341,18 @@ const RUNTIME = `<script data-gesha-runtime>
 })();
 </script>`;
 
+// Un video siempre va de fondo a pantalla completa, detrás de todo el diseño
+// (sin marcos, curvas ni giros del layout). Las TVs lo pintan en un plano
+// propio que se estira a la caja del <video>: si la caja no tiene la
+// proporción de la pantalla, el video se deforma. La rotación la trae el
+// propio archivo.
+const VIDEO_BACKGROUND = `<style data-gesha-video>
+video[data-gesha]{position:absolute !important;inset:0 !important;top:0 !important;left:0 !important;width:100% !important;height:100% !important;margin:0 !important;z-index:0 !important;object-fit:cover !important;object-position:50% 50% !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;clip-path:none !important;transform:none !important;rotate:none !important;scale:none !important;translate:none !important;filter:none !important;animation:none !important}
+</style>`;
+
 function injectRuntime(html, withVideo) {
-  // Con video: helper para pintarlo en canvas en TVs giradas (gesha:video-canvas).
-  const runtime = (withVideo ? '<script src="/video-canvas.js"></script>\n' : '') + RUNTIME;
+  // Con video: fondo a pantalla completa y helper de canvas (gesha:video-canvas).
+  const runtime = (withVideo ? VIDEO_BACKGROUND + '\n<script src="/video-canvas.js"></script>\n' : '') + RUNTIME;
   const at = html.lastIndexOf('</body>');
   return at === -1 ? html + runtime : html.slice(0, at) + runtime + '\n' + html.slice(at);
 }

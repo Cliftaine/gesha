@@ -27,11 +27,11 @@ html,body{background:#14120f}
 
 /* ── 16 · Pumpkin Spice: foto con espuma que sube, hojas que caen y precio latiendo en una píldora calabaza. ── */
 .slide{background:radial-gradient(120% 60% at 50% 100%,#3d2316 0%,#2a1810 60%);font-family:"Alegreya Sans",system-ui,sans-serif}
-/* Curva de la foto dibujada encima con el color del fondo: las TVs pintan el
-   <video> en un plano propio que ignora border-radius, así que el recorte del
-   .foto no basta. Mismo óvalo que el border-radius (1080×300 por esquina). */
-.slide::after{content:'';position:absolute;left:0;top:1940px;width:100%;height:301px;z-index:1;pointer-events:none;background:radial-gradient(1080px 300px at 100% 0,transparent 99.4%,#2a1810 100%) left top / 50% 100% no-repeat,radial-gradient(1080px 300px at 0 0,transparent 99.4%,#2a1810 100%) right top / 50% 100% no-repeat}
-.foto{inset:auto;top:0;left:0;width:100%;height:2240px;border-radius:0 0 50% 50% / 0 0 300px 300px}
+/* Parte baja café con la curva, dibujada encima de la foto: con video, este
+   va de fondo a pantalla completa (ver promo-packages.js) y la TV ignora
+   border-radius, así que el recorte del .foto no basta. Esquinas: mismo óvalo
+   que el border-radius (1080×300); debajo, el mismo degradado del .slide. */
+.slide::after{content:'';position:absolute;left:0;right:0;top:1940px;bottom:0;z-index:1;pointer-events:none;background:radial-gradient(1080px 300px at 100% 0,transparent 99.4%,#2a1810 100%) left top / 50% 301px no-repeat,radial-gradient(1080px 300px at 0 0,transparent 99.4%,#2a1810 100%) right top / 50% 301px no-repeat,radial-gradient(2592px 2304px at 50% 100%,#3d2316 0%,#2a1810 60%) left 300px / 100% calc(100% - 300px) no-repeat}
 .velo{inset:auto;top:0;left:0;width:100%;height:2240px;border-radius:0 0 50% 50% / 0 0 300px 300px;background:linear-gradient(to bottom,rgba(42,24,16,.55) 0%,rgba(42,24,16,0) 26%,rgba(224,123,42,.08) 70%,rgba(42,24,16,.7) 100%)}
 .texto{position:absolute;left:160px;right:160px;top:2060px;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f6e7d3}
 .slogan{font-size:calc(48px * var(--s-slogan,1));font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#2a1810;background:#f6e7d3;padding:32px 68px 32px calc(68px + .42em);border-radius:1998px}
