@@ -60,12 +60,10 @@
     return canvas;
   };
 
-  // ¿Hace falta? Solo en TVs y con la pantalla girada (rot llega del player);
-  // ?vc=1 lo fuerza (pruebas) y ?vc=0 lo apaga.
+  // ¿Hace falta? Solo si se pide con ?vc=1 en la URL del player y la pantalla
+  // está girada. No es automático: en la Samsung el canvas no funcionó y los
+  // videos se suben ya rotados; activarlo ahí los giraría dos veces.
   window.geshaNeedsVideoCanvas = function (rotation) {
-    var q = /[?&]vc=([01])/.exec(location.search);
-    if (q) return q[1] === '1';
-    var tv = /Tizen|SMART-TV|SmartTV|Web0S|webOS|NetCast|HbbTV/i.test(navigator.userAgent);
-    return tv && (rotation === 90 || rotation === 270);
+    return /[?&]vc=1/.test(location.search) && (rotation === 90 || rotation === 270);
   };
 })();

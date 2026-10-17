@@ -235,8 +235,9 @@ function papelPicado(colors, motifs, stroke = null) {
 ${flags}`);
 }
 write('papel-picado-muertos.svg', papelPicado(
-  ['#e23d8a', '#f59a1b', '#31b7a5', '#f4d35e', '#8e5bd0'],
-  ['manta'],
+  // Número par de banderines: manta y calavera alternan también al repetirse el mosaico.
+  ['#e23d8a', '#f59a1b', '#31b7a5', '#f4d35e', '#8e5bd0', '#e2553d'],
+  ['manta', 'calavera'],
 ));
 // ── Pétalos de cempasúchil cayendo (mosaico) ────────────────────────────────
 function petalos() {

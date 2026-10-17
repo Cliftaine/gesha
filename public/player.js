@@ -14,8 +14,8 @@
   let rotation = Number(body.dataset.rotation) || 0; // 0 | 90 | 180 | 270
   let canvas = { w: 1080, h: 1920 }; // dimensiones de la carta (llega en resolve/SSE)
   const status = document.getElementById('status');
-  // ?vc=1 / ?vc=0 en la URL del player fuerza o apaga el video en canvas.
-  const VC = (/[?&]vc=[01]/.exec(location.search) || [''])[0].replace('?', '&');
+  // ?vc=1 en la URL del player activa el video en canvas (ver video-canvas.js).
+  const VC = /[?&]vc=1/.test(location.search) ? '&vc=1' : '';
 
   // ── Centrado + scale-to-fit con rotación y canvas dinámico ──────────────
   // La carta puede ser vertical (1080×1920) u horizontal (1920×1080), y la

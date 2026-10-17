@@ -206,10 +206,10 @@ const TEMPLATES = {
     roleFonts: { title: 'rye' },
     dark: true,
     // Ilustraciones en public/assets/temporada (npm run temporada): papel
-    // picado calado con la manta, pétalos de cempasúchil cayendo detrás del
+    // picado calado con manta y calavera, pétalos de cempasúchil cayendo detrás del
     // contenido y, abajo, calaverita de azúcar, pan de muerto y cempasúchil.
-    // Cada banderín lleva la manta calada, así que van sin isotipos laterales.
-    css: DARK + HANGING('papel-picado-muertos.svg', 864) + `
+    // Los banderines alternan manta y calavera caladas; sin isotipos laterales.
+    css: DARK + HANGING('papel-picado-muertos.svg', 1037) + `
 [data-t^="mark"]{display:none !important}
 [data-t="frame"]{inset:-840px 0 0 0 !important;border:0 !important;z-index:-1;opacity:.2;background:url(${ART}/petalos.svg) 0 0 / 560px 840px;animation:fxCaer 46s linear infinite;will-change:transform}
 @keyframes fxCaer{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,840px,0)}}
