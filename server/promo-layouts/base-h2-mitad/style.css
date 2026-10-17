@@ -29,11 +29,11 @@ html,body{background:#14120f}
 .slide{background:#f4efe6}
 .foto{left:860px;width:1060px}
 .texto{position:absolute;left:0;top:0;bottom:0;width:860px;padding:0 190px 60px 110px;display:flex;flex-direction:column;justify-content:center;color:#2a2620}
-.precio{position:absolute;left:860px;top:50%;translate:-50% -50%;width:330px;height:330px;border-radius:50%;background:#7a5a3c;color:#f4efe6;border:10px solid #f4efe6;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:116px;line-height:1;box-shadow:0 18px 40px rgba(42,38,32,.28)}
-.slogan{font-size:22px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:#986a4c;margin-bottom:18px}
-.titulo{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:104px;line-height:1;letter-spacing:-.01em}
-.contiene{margin-top:36px;font-size:31px;line-height:1.35;color:#5d554b}
+.precio{position:absolute;left:860px;top:50%;translate:-50% -50%;width:330px;height:330px;border-radius:50%;background:#7a5a3c;color:#f4efe6;border:10px solid #f4efe6;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:calc(116px * var(--s-precio,1));line-height:1;box-shadow:0 18px 40px rgba(42,38,32,.28)}
+.slogan{font-size:calc(22px * var(--s-slogan,1));font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:#986a4c;margin-bottom:18px}
+.titulo{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:calc(104px * var(--s-titulo,1));line-height:1;letter-spacing:-.01em}
+.contiene{margin-top:36px;font-size:calc(31px * var(--s-contiene,1));line-height:1.35;color:#5d554b}
 .contiene li{padding:13px 0;border-top:1px solid rgba(122,90,60,.25)}
 .contiene li:last-child{border-bottom:1px solid rgba(122,90,60,.25)}
-.tyc{position:absolute;left:110px;width:560px;bottom:60px;font-size:19px;line-height:1.5;color:#8a8074}
+.tyc{position:absolute;left:110px;width:560px;bottom:60px;font-size:calc(19px * var(--s-tyc,1));line-height:1.5;color:#8a8074}
 .logo{height:96px}

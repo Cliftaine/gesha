@@ -30,11 +30,11 @@ html,body{background:#14120f}
 .foto{inset:auto;left:110px;right:110px;bottom:0;top:1010px;width:860px;height:910px;border-radius:430px 430px 0 0}
 .velo{background:linear-gradient(to top,rgba(20,18,15,.9) 0%,transparent 22%)}
 .texto{position:absolute;left:80px;right:80px;top:250px;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f3ede3}
-.slogan{font-size:22px;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:#c08a5e}
-.precio{order:2;font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;font-size:340px;line-height:.95;letter-spacing:-.03em;margin-top:6px}
-.titulo{order:3;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:400;font-size:74px;line-height:1.05}
-.contiene{order:4;margin-top:26px;font-size:31px;letter-spacing:.04em;color:rgba(243,237,227,.8)}
+.slogan{font-size:calc(22px * var(--s-slogan,1));font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:#c08a5e}
+.precio{order:2;font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;font-size:calc(340px * var(--s-precio,1));line-height:.95;letter-spacing:-.03em;margin-top:6px}
+.titulo{order:3;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:400;font-size:calc(74px * var(--s-titulo,1));line-height:1.05}
+.contiene{order:4;margin-top:26px;font-size:calc(31px * var(--s-contiene,1));letter-spacing:.04em;color:rgba(243,237,227,.8)}
 .contiene li{display:inline}
 .contiene li + li::before{content:'  ·  ';color:#c08a5e}
-.tyc{position:absolute;left:120px;right:120px;bottom:70px;text-align:center;font-size:20px;letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.75)}
+.tyc{position:absolute;left:120px;right:120px;bottom:70px;text-align:center;font-size:calc(20px * var(--s-tyc,1));letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.75)}
 [data-logo^="abajo"] .logo{bottom:170px}

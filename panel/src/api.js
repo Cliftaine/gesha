@@ -44,7 +44,7 @@ export async function uploadImage(file) {
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || 'Error al subir la imagen');
+    throw new Error(body.error || 'Error al subir el archivo');
   }
   return (await res.json()).url;
 }

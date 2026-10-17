@@ -5,10 +5,12 @@
   const ISO_IDS = ['02', '03', '04', 'mesa1'];
   const iso = rotation.isotipo;
   const markSrc = ISO_IDS.includes(iso)
-    ? `/assets/isotipos/manta-${iso}${rotation.mantaLive ? '-live' : ''}.svg`
+    ? `/assets/isotipos/manta-${iso}.svg`
     : '/assets/manta-mark.png';
   const markFilter = (iso === '02' || iso === '04') ? '' : 'filter: invert(1); ';
-  const legacyLive = !!(rotation.mantaLive && !ISO_IDS.includes(iso));
+  // Manta viva = nado CSS con transform (los -live.svg con filtros SMIL eran
+  // demasiado caros para las TVs).
+  const legacyLive = !!rotation.mantaLive;
 %>
 <!doctype html>
 <html lang="es">
@@ -24,6 +26,9 @@
 .stage{position:relative;width:<%= stage.w %>px;height:<%= stage.h %>px;overflow:hidden;background:#14120f}
 .frame{position:absolute;inset:0;width:<%= stage.w %>px;height:<%= stage.h %>px;overflow:hidden;background:#14120f;color:#F3EDE3;font-family:Archivo,system-ui,sans-serif;opacity:0;transition:opacity <%= rotation.transitionMs %>ms ease}
 .frame.active{opacity:1}
+/* Slides fuera de pantalla: animaciones pausadas y sin pintar (TVs) */
+.frame:not(.active) *{animation-play-state:paused !important}
+.frame.off{visibility:hidden}
 <% if (rotation.textAnimation !== false) { %>
 /* Texto del slide entra escalonado hacia arriba cada vez que el frame se activa */
 .frame [data-zone="promo-text"] > div{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
@@ -35,8 +40,8 @@
 .frame.active [data-zone="promo-text"] > div:nth-child(5){transition-delay:.8s}
 <% } %>
 <% if (legacyLive) { %>
-.fx-manta{animation:fxFlap 7s ease-in-out infinite;transform-origin:50% 42%}
-@keyframes fxFlap{0%,50%,100%{transform:scaleY(1) rotate(0deg)}58%{transform:scaleY(.88) rotate(-2deg)}66%{transform:scaleY(1.06) rotate(1.5deg)}74%{transform:scaleY(.95) rotate(-0.8deg)}82%{transform:scaleY(1.02) rotate(0.4deg)}}
+.fx-manta{animation:fxFlap 12s ease-in-out infinite;transform-origin:50% 42%;will-change:transform}
+@keyframes fxFlap{0%,100%{transform:scaleX(var(--flip,1)) translateY(0) rotate(0deg) scaleY(1)}18%{transform:scaleX(var(--flip,1)) translateY(-5px) rotate(1.4deg) scaleY(1)}26%{transform:scaleX(var(--flip,1)) translateY(-6px) rotate(1.8deg) scaleY(.88) skewX(-1.5deg)}33%{transform:scaleX(var(--flip,1)) translateY(-5px) rotate(.8deg) scaleY(1.06) skewX(1deg)}40%{transform:scaleX(var(--flip,1)) translateY(-3px) rotate(0deg) scaleY(.95)}47%{transform:scaleX(var(--flip,1)) translateY(-1px) rotate(-.4deg) scaleY(1.02)}54%{transform:scaleX(var(--flip,1)) translateY(0) rotate(-.6deg) scaleY(1)}72%{transform:scaleX(var(--flip,1)) translateY(5px) rotate(-1.6deg) scaleY(1)}80%{transform:scaleX(var(--flip,1)) translateY(4px) rotate(-1.2deg) scaleY(.92) skewX(1deg)}87%{transform:scaleX(var(--flip,1)) translateY(2px) rotate(-.6deg) scaleY(1.04)}}
 <% } %>
 </style>
 <%- overrides %>
@@ -45,24 +50,86 @@
 <div class="stage"><% slides.forEach((slide, index) => { %><%- include('../partials/promo-frame', { slide, index, markSrc, markFilter, legacyLive, version, stage }) %><% }) %></div>
 <script>
 (() => {
-  const frames = document.querySelectorAll('.frame');
+  const frames = Array.from(document.querySelectorAll('.frame'));
   if (!frames.length) return;
-  // Paquetes HTML: avisa al iframe cuando su slide entra, para que pueda
-  // reiniciar sus animaciones (window.addEventListener('message', ...)).
-  const notify = (frame) => {
-    const pkg = frame.querySelector('iframe');
-    if (pkg && pkg.contentWindow) pkg.contentWindow.postMessage({ type: 'gesha:slide-active' }, '*');
-  };
-  frames[0].classList.add('active');
-  notify(frames[0]);
-  if (frames.length < 2) return;
+  const SECONDS = <%= rotation.secondsPerSlide %>;
+  const FADE = <%= rotation.transitionMs %>;
+  const MAX_SECONDS = 120; // tope de seguridad para videos largos
+  const durations = new Map(); // frame → duración de su video (s)
   let i = 0;
-  setInterval(() => {
-    frames[i].classList.remove('active');
+
+  // Paquetes HTML: el iframe recibe gesha:slide-active / gesha:slide-inactive
+  // (reinicia o pausa animaciones y video) y responde gesha:duration.
+  const pkgOf = (frame) => frame.querySelector('iframe');
+  const videoOf = (frame) => frame.querySelector('video');
+  const post = (frame, type) => {
+    const pkg = pkgOf(frame);
+    if (pkg && pkg.contentWindow) pkg.contentWindow.postMessage({ type }, '*');
+  };
+  const play = (video) => {
+    try { video.currentTime = 0; } catch (e) {}
+    const p = video.play();
+    if (p && p.catch) p.catch(() => {});
+  };
+
+  // Solo el slide visible anima y reproduce: los demás quedan pausados y,
+  // tras el fade, ocultos (no se pintan). Las TVs tienen pocos decodificadores.
+  const activate = (frame) => {
+    frame.classList.remove('off');
+    frame.classList.add('active');
+    const video = videoOf(frame);
+    if (video) play(video);
+    post(frame, 'gesha:slide-active');
+  };
+  const deactivate = (frame) => {
+    frame.classList.remove('active');
+    const video = videoOf(frame);
+    if (video) video.pause();
+    post(frame, 'gesha:slide-inactive');
+    setTimeout(() => { if (!frame.classList.contains('active')) frame.classList.add('off'); }, FADE + 50);
+  };
+
+  frames.forEach((frame) => {
+    const video = videoOf(frame);
+    if (video) {
+      const known = () => { if (isFinite(video.duration)) durations.set(frame, video.duration); };
+      video.addEventListener('loadedmetadata', known);
+      if (video.readyState >= 1) known(); // metadata ya cargada antes de este script
+    }
+    // El iframe puede cargar después del primer aviso: se le repite su estado.
+    const pkg = pkgOf(frame);
+    if (pkg) {
+      pkg.addEventListener('load', () => {
+        post(frame, frame.classList.contains('active') ? 'gesha:slide-active' : 'gesha:slide-inactive');
+      });
+    }
+    if (frame !== frames[0]) frame.classList.add('off');
+  });
+  addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'gesha:duration') return;
+    const frame = frames.find((f) => pkgOf(f) && pkgOf(f).contentWindow === e.source);
+    if (frame && e.data.seconds > 0) durations.set(frame, Number(e.data.seconds));
+  });
+
+  // Un slide dura secondsPerSlide, o su video completo si es más largo
+  // (un video corto se repite en loop hasta cumplir el tiempo).
+  const holdFor = (frame) => Math.min(MAX_SECONDS, Math.max(SECONDS, durations.get(frame) || 0)) * 1000;
+
+  // La duración del video puede llegar ya iniciado el slide: al vencer el
+  // plazo se recalcula y, si el video es más largo, se espera lo que falte.
+  const wait = (frame, start) => {
+    const left = holdFor(frame) - (Date.now() - start);
+    if (left > 50) setTimeout(() => wait(frame, start), left);
+    else next();
+  };
+  const next = () => {
+    deactivate(frames[i]);
     i = (i + 1) % frames.length;
-    frames[i].classList.add('active');
-    notify(frames[i]);
-  }, <%= rotation.secondsPerSlide * 1000 %>);
+    activate(frames[i]);
+    wait(frames[i], Date.now());
+  };
+  activate(frames[0]);
+  if (frames.length > 1) wait(frames[0], Date.now());
 })();
 </script>
 </body>

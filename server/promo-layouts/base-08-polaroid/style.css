@@ -29,9 +29,9 @@ html,body{background:#14120f}
 .slide{background:radial-gradient(ellipse at 50% 30%,#e2cfae 0%,#cdb389 100%)}
 .foto{inset:auto;left:150px;top:300px;width:780px;height:900px;border:30px solid #fdfbf6;border-bottom-width:130px;rotate:-4deg;box-shadow:0 30px 60px rgba(60,40,20,.35)}
 .texto{position:absolute;inset:0;padding:0 90px;text-align:center;color:#2f2a22}
-.slogan{position:absolute;left:0;right:0;top:120px;font-family:Caveat,cursive;font-weight:700;font-size:104px;line-height:1;color:#7a4a2a;rotate:-3deg}
-.precio{position:absolute;right:80px;top:1040px;font-family:Fraunces,Georgia,serif;font-weight:600;font-size:110px;line-height:1;background:#9a4e2f;color:#fdfbf6;padding:26px 42px 30px;border-radius:20px;rotate:7deg;box-shadow:0 16px 30px rgba(60,40,20,.35)}
-.titulo{position:absolute;left:90px;right:90px;top:1330px;font-family:Fraunces,Georgia,serif;font-weight:500;font-size:86px;line-height:1.02;letter-spacing:-.01em}
-.contiene{position:absolute;left:120px;right:120px;top:1540px;font-size:35px;line-height:1.5;color:#5a4c3a}
-.tyc{position:absolute;left:90px;right:90px;bottom:60px;text-align:center;font-size:21px;color:#7d6c55}
+.slogan{position:absolute;left:0;right:0;top:120px;font-family:Caveat,cursive;font-weight:700;font-size:calc(104px * var(--s-slogan,1));line-height:1;color:#7a4a2a;rotate:-3deg}
+.precio{position:absolute;right:80px;top:1040px;font-family:Fraunces,Georgia,serif;font-weight:600;font-size:calc(110px * var(--s-precio,1));line-height:1;background:#9a4e2f;color:#fdfbf6;padding:26px 42px 30px;border-radius:20px;rotate:7deg;box-shadow:0 16px 30px rgba(60,40,20,.35)}
+.titulo{position:absolute;left:90px;right:90px;top:1330px;font-family:Fraunces,Georgia,serif;font-weight:500;font-size:calc(86px * var(--s-titulo,1));line-height:1.02;letter-spacing:-.01em}
+.contiene{position:absolute;left:120px;right:120px;top:1540px;font-size:calc(35px * var(--s-contiene,1));line-height:1.5;color:#5a4c3a}
+.tyc{position:absolute;left:90px;right:90px;bottom:60px;text-align:center;font-size:calc(21px * var(--s-tyc,1));color:#7d6c55}
 [data-logo^="abajo"] .logo{bottom:104px;height:84px}

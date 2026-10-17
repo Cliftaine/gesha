@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { apiGet, apiPut, apiDelete, debounce, uploadImage, uploadFile, ConflictError } from './api.js';
 import { MarkControls } from './MenuEditor.jsx';
-import { OptionCards, ToggleCard, UploadCard, Field, Framing } from './OptionCards.jsx';
+import { OptionCards, ToggleCard, UploadCard, Field, Framing, Media, MEDIA_ACCEPT } from './OptionCards.jsx';
 
 const DAYS = [
   ['mon', 'L'], ['tue', 'M'], ['wed', 'X'], ['thu', 'J'],
@@ -348,6 +348,23 @@ function LogoPicker({ value, defaultLabel, logos, onChange, onLibraryChange }) {
   );
 }
 
+// Tamaño de un texto (%), junto a su campo: −/+ de 10 en 10, ↺ vuelve a 100.
+// Compartido por el diseño estándar y las plantillas: values.<rol>_size.
+function SizeCtl({ value, onChange }) {
+  const raw = Number(value);
+  const pct = raw >= 50 && raw <= 200 ? raw : 100;
+  const set = (v) => onChange(v === 100 ? null : String(Math.min(200, Math.max(50, v))));
+  return (
+    <span className="size-ctl" title="Tamaño del texto en pantalla">
+      <button type="button" className="ghost small" onClick={() => set(pct - 10)}>−</button>
+      <input type="number" min="50" max="200" step="10" value={pct} onChange={(e) => set(Number(e.target.value) || 100)} />
+      <span>%</span>
+      <button type="button" className="ghost small" onClick={() => set(pct + 10)}>+</button>
+      <button type="button" className="ghost small" disabled={pct === 100} title="Restablecer" onClick={() => set(100)}>↺</button>
+    </span>
+  );
+}
+
 // Campos de la plantilla de una promo: texto, lista, opciones o imagen.
 // El input muestra el valor guardado o, si no hay, el default de la plantilla;
 // vaciarlo lo oculta en el slide y ↺ vuelve al default.
@@ -385,7 +402,7 @@ function PackageFields({ pkg, values, onChange, logos = [], onLibraryChange, hor
           );
         }
         return (
-          <div key={f.key} className={'fld' + (f.type === 'list' || f.type === 'image' || f.type === 'select' ? ' wide' : '')}>
+          <div key={f.key} className={'fld' + (f.type === 'list' || f.type === 'image' || f.type === 'select' || f.key === 'tyc' ? ' wide' : '')}>
             <span>{f.label}</span>
             <div className="fld-control" style={{ gap: 6, alignItems: 'flex-start' }}>
               {f.type === 'select' ? (
@@ -401,19 +418,20 @@ function PackageFields({ pkg, values, onChange, logos = [], onLibraryChange, hor
                 <textarea className="grow" rows={Math.max(3, val.split(/\n|;/).length)} value={val.replace(/;\s*/g, '\n')}
                   onChange={(e) => onChange(f.key, e.target.value)} />
               ) : (
-                <input type="text" className="grow" value={val} placeholder={f.type === 'image' ? 'URL de imagen' : '(oculto)'}
+                <input type="text" className="grow" value={val} placeholder={f.type === 'image' ? 'URL de imagen o video' : '(oculto)'}
                   onChange={(e) => onChange(f.key, e.target.value)} />
               )}
               {f.type === 'image' && (
                 <>
-                  {val && <img src={val.startsWith('/') || val.startsWith('http') ? val : `/promo-pkg/${pkg.id}/${val}`} alt=""
+                  {val && <Media src={val.startsWith('/') || val.startsWith('http') ? val : `/promo-pkg/${pkg.id}/${val}`}
                     style={{ width: 44, height: 34, objectFit: 'cover', borderRadius: 6, background: '#ddd' }} />}
-                  <label className="file-btn">
-                    subir <input type="file" accept="image/png,image/jpeg,image/webp,image/avif" hidden onChange={(e) => onImage(f.key, e)} />
+                  <label className="file-btn" title="Foto o video (MP4 H.264, 1080p, sin audio)">
+                    subir <input type="file" accept={MEDIA_ACCEPT} hidden onChange={(e) => onImage(f.key, e)} />
                   </label>
                 </>
               )}
               {reset}
+              {f.sizable && <SizeCtl value={values[`${f.key}_size`]} onChange={(v) => onChange(`${f.key}_size`, v)} />}
             </div>
             {f.type === 'image' && f.framing && val && (
               <Framing src={val.startsWith('/') || val.startsWith('http') ? val : `/promo-pkg/${pkg.id}/${val}`}
@@ -576,34 +594,56 @@ function PromoCard({ p, index, total, packages = [], logos = [], onLibraryChange
           })} />
       ) : (
         <>
-          <div className="fields">
-            <Field label="Etiqueta superior" width={200}>
-              <input type="text" value={p.kicker} onChange={(e) => onChange((x) => { x.kicker = e.target.value; })} />
-            </Field>
-            <Field label="Precio o titular" width={150}>
-              <input type="text" value={p.headline} style={{ fontWeight: 700 }} onChange={(e) => onChange((x) => { x.headline = e.target.value; })} />
-            </Field>
-            <Field label="Nombre de la promoción" grow>
-              <input type="text" value={p.subtitle} onChange={(e) => onChange((x) => { x.subtitle = e.target.value; })} />
-            </Field>
-          </div>
-          <div className="fields">
-            <Field label="Descripción" grow>
-              <input type="text" value={p.description} onChange={(e) => onChange((x) => { x.description = e.target.value; })} />
-            </Field>
-            <Field label="Nota al pie / términos" width={260}>
-              <input type="text" value={p.footnote} onChange={(e) => onChange((x) => { x.footnote = e.target.value; })} />
-            </Field>
-          </div>
+          {(() => {
+            const size = (key) => (
+              <SizeCtl value={p.values?.[`${key}_size`]} onChange={(v) => onChange((x) => {
+                x.values = x.values || {};
+                if (v == null) delete x.values[`${key}_size`];
+                else x.values[`${key}_size`] = v;
+              })} />
+            );
+            return (
+              <>
+                <div className="fields">
+                  <Field label="Etiqueta superior" width={330}>
+                    <input type="text" value={p.kicker} onChange={(e) => onChange((x) => { x.kicker = e.target.value; })} />
+                    {size('slogan')}
+                  </Field>
+                  <Field label="Precio o titular" width={300}>
+                    <input type="text" value={p.headline} style={{ fontWeight: 700 }} onChange={(e) => onChange((x) => { x.headline = e.target.value; })} />
+                    {size('precio')}
+                  </Field>
+                </div>
+                <div className="fields">
+                  <Field label="Nombre de la promoción" grow>
+                    <input type="text" value={p.subtitle} onChange={(e) => onChange((x) => { x.subtitle = e.target.value; })} />
+                    {size('titulo')}
+                  </Field>
+                </div>
+                <div className="fields">
+                  <Field label="Descripción" grow>
+                    <input type="text" value={p.description} onChange={(e) => onChange((x) => { x.description = e.target.value; })} />
+                    {size('contiene')}
+                  </Field>
+                </div>
+                <div className="fields">
+                  <Field label="Nota al pie / términos" grow>
+                    <input type="text" value={p.footnote} onChange={(e) => onChange((x) => { x.footnote = e.target.value; })} />
+                    {size('tyc')}
+                  </Field>
+                </div>
+              </>
+            );
+          })()}
           <span className="fld-title">Logo — de esta promoción</span>
           <LogoPicker value={p.logo || ''} defaultLabel="El general" logos={logos} onLibraryChange={onLibraryChange}
             onChange={(v) => onChange((x) => { if (v) x.logo = v; else delete x.logo; })} />
           <div className="fields" style={{ marginTop: 8 }}>
-            <Field label="Imagen de fondo (URL o súbela)" grow>
+            <Field label="Imagen o video de fondo (URL o súbelo · video: MP4 H.264, 1080p, sin audio)" grow>
               <input type="text" value={p.image} onChange={(e) => onChange((x) => { x.image = e.target.value; })} />
-              {p.image && <img src={p.image} alt="" style={{ width: 52, height: 38, objectFit: 'cover', borderRadius: 6, marginLeft: 6 }} />}
+              {p.image && <Media src={p.image} style={{ width: 52, height: 38, objectFit: 'cover', borderRadius: 6, marginLeft: 6 }} />}
               <label className="file-btn" style={{ marginLeft: 6, whiteSpace: 'nowrap' }}>
-                subir <input type="file" accept="image/png,image/jpeg,image/webp,image/avif" hidden onChange={onFile} />
+                subir <input type="file" accept={MEDIA_ACCEPT} hidden onChange={onFile} />
               </label>
             </Field>
           </div>

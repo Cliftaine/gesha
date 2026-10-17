@@ -1,0 +1,37 @@
+/* ── Base común de los diseños incluidos (1080×1920) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:120px;width:auto;max-width:340px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:72px;left:80px}
+[data-logo="arriba-centro"] .logo{top:72px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:72px;right:80px}
+[data-logo="abajo-izquierda"] .logo{bottom:140px;left:80px}
+[data-logo="abajo-centro"] .logo{bottom:140px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:140px;right:80px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ── 13 · Insignia: Precio en una insignia dentada al centro de la foto; textos arriba y abajo. ── */
+.velo{background:linear-gradient(to bottom,rgba(20,18,15,.7) 0%,rgba(20,18,15,.15) 30%,rgba(20,18,15,.2) 70%,rgba(20,18,15,.92) 100%)}
+.texto{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f3ede3;padding:250px 90px 0}
+.slogan{font-size:calc(26px * var(--s-slogan,1));font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#f6dcc0}
+.titulo{order:2;font-family:"Bebas Neue",Impact,sans-serif;font-size:calc(150px * var(--s-titulo,1));line-height:.92;letter-spacing:.01em;margin-top:18px}
+.precio{order:3;margin-top:130px;width:440px;height:440px;display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",Impact,sans-serif;font-size:calc(190px * var(--s-precio,1));line-height:1;color:#14120f;background:#f6c667;clip-path:polygon(50% 0,58% 10%,69% 4%,73% 15%,85% 14%,84% 26%,96% 30%,90% 40%,100% 50%,90% 60%,96% 70%,84% 74%,85% 86%,73% 85%,69% 96%,58% 90%,50% 100%,42% 90%,31% 96%,27% 85%,15% 86%,16% 74%,4% 70%,10% 60%,0 50%,10% 40%,4% 30%,16% 26%,15% 14%,27% 15%,31% 4%,42% 10%);animation:gira 14s linear infinite}
+@keyframes gira{to{rotate:360deg}}
+.contiene{position:absolute;left:90px;right:90px;bottom:250px;font-size:calc(30px * var(--s-contiene,1));font-weight:500;line-height:1.5;text-align:center}
+.contiene li{display:inline}.contiene li + li::before{content:'  ·  ';color:#f6c667}
+.tyc{position:absolute;left:90px;right:90px;bottom:96px;text-align:center;font-size:calc(17px * var(--s-tyc,1));letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.65)}

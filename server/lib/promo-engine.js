@@ -4,6 +4,7 @@
 const store = require('./store');
 const { ruleMatches, dateWindowMatches, localParts } = require('./dispatch');
 const promoPackages = require('./promo-packages');
+const { isVideo } = require('./media');
 
 // Imágenes por defecto para slides dinámicos (Unsplash, como los seeds actuales).
 const DEFAULT_IMAGES = {
@@ -45,8 +46,15 @@ function toSlide(p, score, orientation = 'vertical') {
     description: p.description || '',
     footnote: p.footnote || '',
     image: p.image || DEFAULT_IMAGES.promoDelDia,
+    // Fondo animado: un .mp4/.webm se reproduce como video (lo controla el carrusel).
+    media: isVideo(p.image) ? 'video' : 'image',
     // Encuadre de la foto en el diseño estándar ("x% y%"; el panel lo arrastra).
     imagePos: /^\d{1,3}% \d{1,3}%$/.test(p.imagePos) ? p.imagePos : null,
+    // Tamaños de texto (%) del diseño estándar: mismas claves que las plantillas.
+    sizes: Object.fromEntries(['slogan', 'precio', 'titulo', 'contiene', 'tyc'].map((k) => {
+      const pct = Number(p.values?.[`${k}_size`]);
+      return [k, pct >= 50 && pct <= 200 && pct !== 100 ? pct / 100 : null];
+    })),
     // Logo propio de esta promo en el diseño estándar (si no, el isotipo general).
     logo: typeof p.logo === 'string' && /^(\/uploads\/|\/assets\/)[^"'<>\s]+$/.test(p.logo) ? p.logo : null,
     // Diseño propio: paquete HTML subido (ver promo-packages.js).

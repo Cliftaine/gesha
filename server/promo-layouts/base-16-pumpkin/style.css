@@ -1,0 +1,78 @@
+/* ── Base común de los diseños incluidos, maquetado en 4K (2160×3840) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:2160px;height:3840px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:240px;width:auto;max-width:680px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:144px;left:160px}
+[data-logo="arriba-centro"] .logo{top:144px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:144px;right:160px}
+[data-logo="abajo-izquierda"] .logo{bottom:280px;left:160px}
+[data-logo="abajo-centro"] .logo{bottom:280px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:280px;right:160px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(68px)}to{opacity:1;transform:none}}
+
+/* ── 16 · Pumpkin Spice: foto con espuma que sube, hojas que caen y precio latiendo en una píldora calabaza. ── */
+.slide{background:radial-gradient(120% 60% at 50% 100%,#3d2316 0%,#2a1810 60%)}
+.foto{inset:auto;top:0;left:0;width:100%;height:2240px;border-radius:0 0 50% 50% / 0 0 300px 300px}
+.velo{inset:auto;top:0;left:0;width:100%;height:2240px;border-radius:0 0 50% 50% / 0 0 300px 300px;background:linear-gradient(to bottom,rgba(42,24,16,.55) 0%,rgba(42,24,16,0) 26%,rgba(224,123,42,.08) 70%,rgba(42,24,16,.7) 100%)}
+.texto{position:absolute;left:160px;right:160px;top:2060px;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f6e7d3}
+.slogan{font-size:calc(48px * var(--s-slogan,1));font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#2a1810;background:#f6e7d3;padding:32px 68px 32px calc(68px + .42em);border-radius:1998px}
+.titulo{margin-top:80px;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:600;font-size:calc(232px * var(--s-titulo,1));line-height:.98;text-wrap:balance;background:linear-gradient(100deg,#f6e7d3 42%,#ffd9a8 50%,#f6e7d3 58%) 100% 0/300% 100% no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent}
+.precio{margin-top:88px;font-family:"Bebas Neue",Impact,sans-serif;font-size:calc(400px * var(--s-precio,1));line-height:1;color:#2a1810;background:#e07b2a;padding:60px 160px 28px;border-radius:1998px;box-shadow:0 0 0 20px rgba(224,123,42,.25),0 48px 120px rgba(0,0,0,.35)}
+.contiene{margin-top:92px;font-size:calc(64px * var(--s-contiene,1));font-weight:500;line-height:1.5;color:#f6e7d3}
+.contiene li + li{color:rgba(246,231,211,.7)}
+.tyc{position:absolute;left:180px;right:180px;bottom:192px;text-align:center;font-size:calc(34px * var(--s-tyc,1));letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:rgba(246,231,211,.55)}
+
+/* Animaciones propias (además de la entrada escalonada común) */
+.entra .texto > .titulo{animation:sube .8s cubic-bezier(.2,.7,.2,1) .12s both,brillo 6s ease-in-out 1.2s infinite}
+@keyframes brillo{0%{background-position:100% 0}35%,100%{background-position:0 0}}
+.entra .texto > .precio{animation:sube .8s cubic-bezier(.2,.7,.2,1) .24s both,late 2.4s ease-in-out 1.4s infinite}
+@keyframes late{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+/* Espuma: burbujas crema que suben sobre la foto */
+.espuma{position:absolute;top:0;left:0;width:100%;height:2240px;overflow:hidden;pointer-events:none;z-index:2;border-radius:0 0 50% 50% / 0 0 300px 300px}
+.espuma i{position:absolute;bottom:-60px;width:var(--t,80px);height:var(--t,80px);border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,250,240,.95),rgba(246,231,211,.45) 60%,rgba(246,231,211,0) 72%);animation:espuma var(--d,9s) ease-in infinite var(--r,0s);opacity:0;will-change:transform,opacity}
+.espuma i:nth-child(1){left:8%;--t:92px;--d:9s;--r:0s}
+.espuma i:nth-child(2){left:18%;--t:56px;--d:7s;--r:2.5s}
+.espuma i:nth-child(3){left:29%;--t:120px;--d:11s;--r:1s}
+.espuma i:nth-child(4){left:41%;--t:68px;--d:8s;--r:4s}
+.espuma i:nth-child(5){left:52%;--t:104px;--d:10s;--r:.5s}
+.espuma i:nth-child(6){left:62%;--t:48px;--d:6.5s;--r:3s}
+.espuma i:nth-child(7){left:71%;--t:88px;--d:9.5s;--r:5s}
+.espuma i:nth-child(8){left:80%;--t:60px;--d:7.5s;--r:1.8s}
+.espuma i:nth-child(9){left:88%;--t:112px;--d:12s;--r:3.6s}
+.espuma i:nth-child(10){left:46%;--t:40px;--d:6s;--r:6s}
+@keyframes espuma{0%{transform:translate(0,0);opacity:0}15%{opacity:.85}60%{transform:translate(48px,-620px)}100%{transform:translate(-18px,-1000px);opacity:0}}
+
+/* Hojas de otoño que caen y se mecen por todo el slide */
+.hojas{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.hojas svg{position:absolute;top:-140px;left:var(--x);width:var(--t);height:var(--t);fill:var(--c);opacity:.9;animation:cae var(--d) linear infinite var(--r);will-change:transform}
+.hojas svg:nth-child(1){--x:6%;--t:140px;--c:#e07b2a;--d:13s;--r:0s}
+.hojas svg:nth-child(2){--x:22%;--t:96px;--c:#a0522d;--d:10s;--r:-4s}
+.hojas svg:nth-child(3){--x:38%;--t:172px;--c:#c9641f;--d:16s;--r:-9s}
+.hojas svg:nth-child(4){--x:55%;--t:108px;--c:#e9a03b;--d:12s;--r:-2s}
+.hojas svg:nth-child(5){--x:70%;--t:152px;--c:#a0522d;--d:14s;--r:-7s}
+.hojas svg:nth-child(6){--x:84%;--t:88px;--c:#e07b2a;--d:11s;--r:-5s}
+.hojas svg:nth-child(7){--x:92%;--t:128px;--c:#c9641f;--d:15s;--r:-11s}
+.hojas svg:nth-child(8){--x:14%;--t:116px;--c:#e9a03b;--d:17s;--r:-13s}
+@keyframes cae{
+  0%{transform:translate(0,0) rotate(0deg)}
+  25%{transform:translate(120px,1080px) rotate(90deg)}
+  50%{transform:translate(-40px,2120px) rotate(200deg)}
+  75%{transform:translate(100px,3160px) rotate(280deg)}
+  100%{transform:translate(-20px,4200px) rotate(380deg)}
+}

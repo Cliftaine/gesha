@@ -181,6 +181,8 @@ const MOTIFS = {
   campana: `<path d="M108 46 C90 46 82 62 82 84 C82 98 78 106 70 112 L146 112 C138 106 134 98 134 84 C134 62 126 46 108 46Z" fill="#000"/>
 <circle cx="108" cy="121" r="7" fill="#000"/><rect x="104" y="38" width="8" height="10" rx="3" fill="#000"/>
 <path d="M90 96 H126" stroke="#fff" stroke-width="3"/>`,
+  // Sin motivo central: banderín liso para montar encima el isotipo.
+  liso: '',
   estrella: `<path d="M108 42 L118 72 L150 72 L124 91 L134 122 L108 103 L82 122 L92 91 L66 72 L98 72Z" fill="#000"/><circle cx="108" cy="86" r="7" fill="#fff"/>`,
   sol: `<g transform="translate(108 84)">${Array.from({ length: 12 }, (_, i) => `<path transform="rotate(${i * 30})" d="M-6 -22 L0 -42 L6 -22Z" fill="#000"/>`).join('')}<circle r="18" fill="#000"/><circle r="8" fill="#fff"/></g>`,
 };
@@ -218,6 +220,10 @@ write('papel-picado-muertos.svg', papelPicado(
   ['#e23d8a', '#f59a1b', '#31b7a5', '#f4d35e', '#8e5bd0'],
   ['calavera', 'flor', 'calavera', 'sol', 'calavera'],
 ));
+// Banderín central (mismo color, forma y caída que el 3.º del mosaico, que
+// cae justo al centro del canvas): sin calavera, para colgar ahí la manta.
+write('papel-picado-centro.svg', svg(FLAG_W, FLAG_H + 26, `<defs>${flagMask('m0', 'liso')}</defs>
+<path d="${flagShape()}" fill="#31b7a5" mask="url(#m0)"/>`));
 // ── Pétalos de cempasúchil cayendo (mosaico) ────────────────────────────────
 function petalos() {
   const r = rng(21);

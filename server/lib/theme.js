@@ -18,11 +18,14 @@ const FONTS = {
   lobster: { label: 'Lobster', stack: 'Lobster, cursive', google: 'Lobster', role: 'display' },
   mountains: { label: 'Mountains of Christmas', stack: '"Mountains of Christmas", Georgia, serif', google: 'Mountains+of+Christmas:wght@400;700', role: 'display' },
   creepster: { label: 'Creepster', stack: 'Creepster, Impact, fantasy', google: 'Creepster', role: 'display' },
+  rye: { label: 'Rye (lotería)', stack: 'Rye, Georgia, serif', google: 'Rye', role: 'display' },
+  alegreya: { label: 'Alegreya', stack: 'Alegreya, Georgia, serif', google: 'Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,500', role: 'display' },
   archivo: { label: 'Archivo', stack: 'Archivo, system-ui, sans-serif', google: 'Archivo:wght@400;500;600;700', role: 'body' },
   inter: { label: 'Inter', stack: 'Inter, system-ui, sans-serif', google: 'Inter:wght@400;500;600;700', role: 'body' },
   'work-sans': { label: 'Work Sans', stack: '"Work Sans", system-ui, sans-serif', google: 'Work+Sans:wght@400;500;600;700', role: 'body' },
   montserrat: { label: 'Montserrat', stack: 'Montserrat, system-ui, sans-serif', google: 'Montserrat:wght@400;500;600;700', role: 'body' },
   spectral: { label: 'Spectral', stack: 'Spectral, Georgia, serif', google: 'Spectral:ital,wght@0,400;0,500;0,600;1,400', role: 'body' },
+  'alegreya-sans': { label: 'Alegreya Sans', stack: '"Alegreya Sans", system-ui, sans-serif', google: 'Alegreya+Sans:wght@400;500;700', role: 'body' },
 };
 
 // ── Fondos incluidos (valores CSS de `background`, sin archivos) ────────────
@@ -195,16 +198,26 @@ const TEMPLATES = {
     group: 'festiva', emoji: '💀', particles: 'Pétalos cayendo',
     label: 'Día de Muertos',
     description: 'Papel picado, cempasúchil y morado de ofrenda.',
-    colors: { ink: [252, 240, 222], accent: [245, 154, 27], muted: [214, 180, 210], faint: [160, 126, 160], rule: [226, 61, 138], slot: [56, 24, 66] },
+    colors: { ink: [252, 240, 222], accent: [245, 154, 27], muted: [228, 200, 182], faint: [186, 152, 150], rule: [226, 61, 138], slot: [56, 24, 66] },
     background: 'muertos',
-    fonts: { display: 'abril', body: 'work-sans' },
+    // Lotería: Rye (rótulo de carta de lotería) en el título; Alegreya con
+    // itálica real para precios y notas; Alegreya Sans, compacta, para el texto.
+    fonts: { display: 'alegreya', body: 'alegreya-sans' },
+    roleFonts: { title: 'rye' },
     dark: true,
     // Ilustraciones en public/assets/temporada (npm run temporada): papel
     // picado calado con calaveras, pétalos de cempasúchil cayendo detrás del
     // contenido y, abajo, calaverita de azúcar, pan de muerto y cempasúchil.
+    // La manta cuelga del banderín central del papel picado (liso, sin
+    // calavera) como si estuviera calada en el papel; sin isotipos laterales.
     css: DARK + HANGING('papel-picado-muertos.svg', 864) + `
-[data-t="frame"]{inset:0 !important;border:0 !important;z-index:-1;opacity:.2;background:url(${ART}/petalos.svg) 0 0 / 560px 840px;animation:fxCaer 46s linear infinite}
-@keyframes fxCaer{to{background-position:0 840px}}
+[data-zone="title"]::before{content:'';position:absolute;left:50%;top:0;width:172.8px;height:140.8px;translate:-50% 0;background:url(${ART}/papel-picado-centro.svg) 0 0 / 100% 100% no-repeat;z-index:4;pointer-events:none}
+[data-t="mark-r"]{display:none !important}
+[data-t="mark-l"]{left:50% !important;top:24px !important;height:88px !important;translate:-50% 0;z-index:5;filter:brightness(0) !important;opacity:.95}
+[data-t="canvas"][style*="width: 1920px"] [data-zone="title"]::before{width:124.4px;height:101.4px}
+[data-t="canvas"][style*="width: 1920px"] [data-t="mark-l"]{top:17px !important;height:64px !important}
+[data-t="frame"]{inset:-840px 0 0 0 !important;border:0 !important;z-index:-1;opacity:.2;background:url(${ART}/petalos.svg) 0 0 / 560px 840px;animation:fxCaer 46s linear infinite;will-change:transform}
+@keyframes fxCaer{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,840px,0)}}
 [data-t="canvas"]::after{content:'';position:absolute;left:0;right:0;bottom:8px;height:106px;z-index:3;pointer-events:none;background:
 url(${ART}/calaverita.svg) 146px 100% / auto 104px no-repeat,
 url(${ART}/cempasuchil.svg) 38px 100% / 100px no-repeat,
@@ -225,10 +238,12 @@ url(${ART}/cempasuchil.svg) calc(100% - 268px) 100% / 62px no-repeat}
     // público, Wikimedia Commons) y confeti tricolor tenue detrás del contenido.
     css: `
 [data-t="canvas"]{isolation:isolate}
-[data-t="frame"]{inset:0 !important;border:0 !important;z-index:-1;opacity:.2;background:url(${ART}/confeti-mx.svg) 0 0 / 720px 1080px,url(${ART}/confeti-mx.svg) 300px 0 / 1040px 1560px;animation:fxConfeti 26s linear infinite}
-@keyframes fxConfeti{to{background-position:0 1080px,300px 1560px}}
+[data-t="frame"]{inset:-1080px 0 0 0 !important;border:0 !important;z-index:-1;opacity:.2;background:url(${ART}/confeti-mx.svg) 0 0 / 720px 1080px;animation:fxConfeti 26s linear infinite;will-change:transform}
+[data-t="frame"]::before{content:'';position:absolute;left:0;right:0;top:-480px;bottom:0;background:url(${ART}/confeti-mx.svg) 300px 0 / 1040px 1560px;animation:fxConfeti2 26s linear infinite;will-change:transform}
+@keyframes fxConfeti{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,1080px,0)}}
+@keyframes fxConfeti2{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,480px,0)}}
 [data-t^="mark"]{display:none}
-[data-zone="title"]::before,[data-zone="title"]::after{content:'';position:absolute;top:40px;width:204px;height:150px;background:linear-gradient(90deg,#d8b45c,#8a6a2a) 0 0 / 7px 100% no-repeat,url(${ART}/bandera-mx.svg) 7px 8px / 196px 112px no-repeat;transform-origin:0 30%;animation:fxBandera 5s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.2))}
+[data-zone="title"]::before,[data-zone="title"]::after{content:'';position:absolute;top:40px;width:204px;height:150px;background:linear-gradient(90deg,#d8b45c,#8a6a2a) 0 0 / 7px 100% no-repeat,url(${ART}/bandera-mx.svg) 7px 8px / 196px 112px no-repeat;transform-origin:0 30%;animation:fxBandera 5s ease-in-out infinite;will-change:transform}
 [data-zone="title"]::before{left:54px}
 [data-zone="title"]::after{right:54px;animation-delay:-2.2s}
 @keyframes fxBandera{0%,100%{transform:perspective(700px) rotateY(0deg) skewY(0deg)}50%{transform:perspective(700px) rotateY(-16deg) skewY(-1.6deg)}}

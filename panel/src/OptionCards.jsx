@@ -79,6 +79,17 @@ export function Field({ label, children, grow = false, width }) {
 // miniatura con la proporción de la pantalla; arrastrar mueve la foto y
 // devuelve "x% y%" (object-position). El desplazamiento se calcula con el
 // sobrante real de la imagen, así el arrastre sigue al dedo.
+// Fondos de promo: imagen o video (.mp4/.webm), igual que server/lib/media.js.
+export const isVideo = (url) => typeof url === 'string' && /\.(mp4|webm)$/i.test(url.split(/[?#]/)[0]);
+export const MEDIA_ACCEPT = 'image/png,image/jpeg,image/webp,image/avif,video/mp4,video/webm';
+
+// Miniatura/preview de un fondo: <video> mudo en loop o <img>.
+export const Media = React.forwardRef(function Media({ src, ...props }, ref) {
+  return isVideo(src)
+    ? <video ref={ref} src={src} muted loop autoPlay playsInline {...props} />
+    : <img ref={ref} src={src} alt="" {...props} />;
+});
+
 export function Framing({ src, value, horizontal = false, onChange }) {
   const box = useRef(null);
   const img = useRef(null);
@@ -89,12 +100,14 @@ export function Framing({ src, value, horizontal = false, onChange }) {
   const [x, y] = parse(value);
   const onDown = (e) => {
     const el = img.current, b = box.current;
-    if (!el || !b || !el.naturalWidth) return;
+    // <img> expone naturalWidth; <video>, videoWidth.
+    const nw = el && (el.naturalWidth || el.videoWidth), nh = el && (el.naturalHeight || el.videoHeight);
+    if (!el || !b || !nw) return;
     e.preventDefault();
     const r = b.getBoundingClientRect();
-    const scale = Math.max(r.width / el.naturalWidth, r.height / el.naturalHeight);
-    const overX = el.naturalWidth * scale - r.width;
-    const overY = el.naturalHeight * scale - r.height;
+    const scale = Math.max(r.width / nw, r.height / nh);
+    const overX = nw * scale - r.width;
+    const overY = nh * scale - r.height;
     const start = { px: e.clientX, py: e.clientY, x, y };
     const move = (ev) => {
       const nx = overX > 1 ? start.x - ((ev.clientX - start.px) / overX) * 100 : start.x;
@@ -108,7 +121,7 @@ export function Framing({ src, value, horizontal = false, onChange }) {
   return (
     <div className="framing">
       <div ref={box} className={'framing-box' + (horizontal ? ' h' : '')} onPointerDown={onDown} title="Arrastra la foto para encuadrarla">
-        <img ref={img} src={src} alt="" draggable="false" style={{ objectPosition: `${x}% ${y}%` }} />
+        <Media ref={img} src={src} draggable="false" style={{ objectPosition: `${x}% ${y}%` }} />
       </div>
       <div className="framing-side">
         <small>Encuadre: arrastra la foto</small>

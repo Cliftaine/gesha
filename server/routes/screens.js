@@ -46,7 +46,10 @@ router.get('/carta/:cartaId', async (req, res, next) => {
     // el editor visual del panel (?edit=1) sí necesita el puntero.
     const kiosk = req.query.edit === '1'
       ? html
-      : html.replace('</head>', '<style data-kiosk>html,body,body *{cursor:none !important}</style>\n</head>');
+      : html.replace('</head>', '<style data-kiosk>html,body,body *{cursor:none !important}</style>\n'
+        // Al primer clic/toque (control de la TV) se bloquea el puntero: lo
+        // oculta incluso donde cursor:none no alcanza.
+        + '<script data-kiosk>addEventListener("pointerdown",function(){var e=document.documentElement;if(!document.pointerLockElement&&e.requestPointerLock){try{var p=e.requestPointerLock();p&&p.catch&&p.catch(function(){})}catch(_){}}});</script>\n</head>');
     res.type('html').send(kiosk);
   } catch (err) {
     next(err);

@@ -29,10 +29,10 @@ html,body{background:#14120f}
 .velo{background:rgba(20,18,15,.58)}
 .velo::after{content:'';position:absolute;inset:44px;border:2px solid rgba(243,237,227,.55)}
 .texto{position:absolute;inset:0;padding:0 140px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#f3ede3}
-.slogan{font-size:22px;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:#d9b48a;margin-bottom:34px}
-.titulo{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-style:italic;font-size:92px;line-height:1.05}
-.precio{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:210px;line-height:1;margin:44px 0;padding:34px 0;border-top:2px solid rgba(243,237,227,.5);border-bottom:2px solid rgba(243,237,227,.5);min-width:520px}
-.contiene{font-size:35px;letter-spacing:.06em;line-height:1.6;color:rgba(243,237,227,.9)}
+.slogan{font-size:calc(22px * var(--s-slogan,1));font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:#d9b48a;margin-bottom:34px}
+.titulo{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-style:italic;font-size:calc(92px * var(--s-titulo,1));line-height:1.05}
+.precio{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:calc(210px * var(--s-precio,1));line-height:1;margin:44px 0;padding:34px 0;border-top:2px solid rgba(243,237,227,.5);border-bottom:2px solid rgba(243,237,227,.5);min-width:520px}
+.contiene{font-size:calc(35px * var(--s-contiene,1));letter-spacing:.06em;line-height:1.6;color:rgba(243,237,227,.9)}
 .contiene li{display:inline}
 .contiene li + li::before{content:'  ·  ';color:#d9b48a}
-.tyc{position:absolute;left:150px;right:150px;bottom:120px;text-align:center;font-size:21px;letter-spacing:.14em;text-transform:uppercase;line-height:1.7;color:rgba(243,237,227,.65)}
+.tyc{position:absolute;left:150px;right:150px;bottom:120px;text-align:center;font-size:calc(21px * var(--s-tyc,1));letter-spacing:.14em;text-transform:uppercase;line-height:1.7;color:rgba(243,237,227,.65)}

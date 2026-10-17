@@ -306,5 +306,21 @@
   {
     "id": "banknote",
     "label": "Efectivo"
+  },
+  {
+    "id": "leche-avena",
+    "label": "Leche de avena"
+  },
+  {
+    "id": "crema-batida",
+    "label": "Crema batida"
+  },
+  {
+    "id": "tapioca",
+    "label": "Tapioca"
+  },
+  {
+    "id": "cold-foam",
+    "label": "Cold foam"
   }
 ]

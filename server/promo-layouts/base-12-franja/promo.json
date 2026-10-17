@@ -1,0 +1,14 @@
+{
+  "name": "12 · Franja vertical",
+  "description": "Foto en una franja vertical a la izquierda y texto apilado a la derecha sobre fondo claro.",
+  "labels": {
+    "foto": "Imagen",
+    "titulo": "Título",
+    "precio": "Precio",
+    "slogan": "Slogan / promocional",
+    "contiene": "Lo que contiene (uno por línea)",
+    "tyc": "Términos y condiciones",
+    "logo": "Logo",
+    "logo_pos": "Posición del logo"
+  }
+}

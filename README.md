@@ -169,16 +169,19 @@ entre columnas como las categorías y son zonas del editor visual (`mk-…`).
 **Por categoría** se elige si se muestran los **precios** y una **breve
 descripción** por platillo.
 
-## Promociones: 10 diseños incluidos
+## Promociones: 15 diseños incluidos
 
 Cada promo elige su **diseño** con miniaturas (Contenido → Promociones →
-"diseño"): el estándar o uno de los 10 incluidos en `server/promo-layouts/`
+"diseño"): el estándar o uno de los 15 verticales (y 3 horizontales) incluidos en `server/promo-layouts/`
 (clásico, mitad y sello, marco centrado, banda diagonal, póster, tarjeta
-flotante, columna lateral, polaroid, precio protagonista y revista). Todos
+flotante, columna lateral, polaroid, precio protagonista, revista, etiqueta,
+franja vertical, insignia, pizarrón y corte diagonal). Todos
 comparten los mismos campos — **imagen** (subible), **título**, **precio**,
 **slogan**, **lo que contiene** (una línea por elemento), **términos y
 condiciones**, **logo** y **posición del logo** (6 esquinas/centros u oculto) —
-así que se puede cambiar de diseño sin recapturar nada. Un campo vacío
+así que se puede cambiar de diseño sin recapturar nada. Cada promo puede
+encuadrar su foto (arrastrando) y ajustar el **tamaño del texto** de cada campo (control −/+ junto al campo)
+en %, también en el diseño estándar. Un campo vacío
 desaparece del slide; ↺ vuelve al texto de ejemplo. Son paquetes HTML normales:
 cualquiera sirve de base para una plantilla propia.
 
@@ -211,6 +214,8 @@ En `index.html`, lo editable se marca con placeholders:
 | `{{img:foto|img/foto.jpg}}` | imagen (default = archivo del paquete) |
 | `{{list:contiene|Café;Pan}}` | lista, una línea por elemento → `<li>` |
 | `{{opt:logo_pos|arriba,abajo,oculto}}` | selector (la primera opción es el default) |
+| `{{pos:foto|50% 50%}}` | encuadre de la imagen `foto` (arrastrable en el panel) |
+| `{{size:titulo|100}}` | tamaño del texto `titulo` en % → factor para `calc()`; el panel lo edita con −/+ |
 
 Cada promo elige su **diseño**: "Estándar" o una plantilla; con plantilla, el
 panel muestra sus campos y la promo conserva horarios, días, clima y prioridad.

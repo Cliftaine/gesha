@@ -1,0 +1,52 @@
+<!doctype html>
+<!--
+  16 · Pumpkin Spice — diseño de promoción incluido en Gesha (4K · 2160×3840).
+  Temporada de otoño: foto arriba con espuma que sube, hojas que caen y el
+  precio latiendo en una píldora color calabaza.
+  Todos los diseños "base-…" comparten los mismos campos, así que una promo
+  puede cambiar de diseño sin perder lo capturado. Copia esta carpeta como
+  punto de partida para tu propia plantilla (.zip con index.html + style.css).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>16 · Pumpkin Spice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<style>.slide{--s-slogan:{{size:slogan|100}};--s-titulo:{{size:titulo|100}};--s-precio:{{size:precio|100}};--s-contiene:{{size:contiene|100}};--s-tyc:{{size:tyc|100}}}</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="hoja" viewBox="0 0 100 100"><path d="M50 4C74 18 90 42 82 66 76 84 62 92 50 96 38 92 24 84 18 66 10 42 26 18 50 4Z"/><path d="M50 14V98M50 40l-16-10M50 40l16-10M50 60l-20-12M50 60l20-12M50 78l-16-10M50 78l16-10" fill="none" stroke="rgba(42,24,16,.35)" stroke-width="3" stroke-linecap="round"/></symbol>
+</svg>
+<main class="slide entra" data-logo="{{opt:logo_pos|arriba-centro,arriba-izquierda,arriba-derecha,abajo-izquierda,abajo-centro,abajo-derecha,oculto}}">
+  <img class="foto" src="{{img:foto|https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=2400&q=85&auto=format&fit=crop}}" alt="" style="object-position:{{pos:foto|50% 50%}}" onerror="this.style.display='none'"/>
+  <div class="velo"></div>
+  <div class="espuma" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="hojas" aria-hidden="true">
+    <svg><use href="#hoja"/></svg><svg><use href="#hoja"/></svg><svg><use href="#hoja"/></svg><svg><use href="#hoja"/></svg>
+    <svg><use href="#hoja"/></svg><svg><use href="#hoja"/></svg><svg><use href="#hoja"/></svg><svg><use href="#hoja"/></svg>
+  </div>
+  <img class="logo" src="{{img:logo|/assets/isotipos/manta-02.svg}}" alt="" onerror="this.style.display='none'"/>
+  <section class="texto">
+    <p class="slogan">{{slogan|Edición de temporada}}</p>
+    <h1 class="titulo">{{titulo|Pumpkin Spice Cold Foam}}</h1>
+    <div class="precio">{{precio|+$15}}</div>
+    <ul class="contiene">{{list:contiene|Espuma fría de calabaza y especias;Agrégala a tu cold brew o latte frío}}</ul>
+  </section>
+  <p class="tyc">{{tyc|Disponible por temporada. Precio adicional a tu bebida.}}</p>
+</main>
+<script>
+  // El carrusel avisa cuando este slide entra: se reinicia la animación.
+  addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'gesha:slide-active') return;
+    const s = document.querySelector('.slide');
+    s.classList.remove('entra');
+    void s.offsetWidth;
+    s.classList.add('entra');
+  });
+</script>
+</body>
+</html>

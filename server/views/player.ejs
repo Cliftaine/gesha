@@ -23,7 +23,7 @@
      parte de la pantalla también lo activa. */
   #fs {
     position: fixed; inset: 0; z-index: 20; display: none;
-    background: transparent; border: 0; cursor: pointer;
+    background: transparent; border: 0;
   }
   #fs span {
     position: absolute; right: 24px; top: 24px;
@@ -32,13 +32,13 @@
     border-radius: 10px; padding: 10px 16px; backdrop-filter: blur(4px);
   }
   body.show-fs #fs { display: block; }
-  /* Señalización: el cursor nunca se ve. Los iframes no reciben el puntero
-     (si lo recibieran, mandaría el cursor de SU documento y no este), así que
-     el cursor:none del player aplica en toda la pantalla. Solo reaparece
-     mientras se ofrece el botón de pantalla completa, que sí necesita un clic. */
+  /* Señalización: el cursor nunca se ve, tampoco sobre el botón de pantalla
+     completa (en TVs Samsung el fullscreen automático siempre falla y el botón
+     cubre toda la pantalla). Los iframes no reciben el puntero (si lo
+     recibieran, mandaría el cursor de SU documento y no este), así que el
+     cursor:none del player aplica en toda la pantalla. */
   html, body, body * { cursor: none !important; }
   iframe.stage { pointer-events: none; }
-  body.show-fs, body.show-fs #fs { cursor: pointer !important; }
 </style>
 </head>
 <body

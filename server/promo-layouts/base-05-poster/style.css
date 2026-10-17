@@ -30,9 +30,9 @@ html,body{background:#14120f}
 .foto{inset:auto;left:160px;top:560px;width:760px;height:760px;border-radius:50%;border:14px solid #f3ede3;box-shadow:0 30px 60px rgba(0,0,0,.35)}
 .texto{position:absolute;inset:0;display:grid;grid-template-columns:1fr;grid-template-rows:560px 760px 1fr;justify-items:center;text-align:center;color:#f3ede3;padding:0 70px}
 .texto > *{grid-column:1}
-.slogan{grid-row:1;align-self:start;margin-top:215px;font-size:26px;font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#f2c9a0}
-.titulo{grid-row:1;align-self:end;margin-bottom:34px;font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;font-size:168px;line-height:.9;text-transform:uppercase;letter-spacing:.015em}
-.precio{grid-row:2;align-self:end;margin-bottom:-70px;z-index:2;font-family:"Bebas Neue",Impact,sans-serif;font-size:190px;line-height:1;background:#f3ede3;color:#8f4a2c;padding:6px 44px 0;border-radius:18px;rotate:-4deg;box-shadow:0 14px 30px rgba(0,0,0,.3)}
-.contiene{grid-row:3;align-self:start;margin-top:120px;font-size:36px;font-weight:500;line-height:1.55}
-.tyc{position:absolute;left:80px;right:80px;bottom:64px;text-align:center;font-size:21px;letter-spacing:.2em;text-transform:uppercase;color:rgba(243,237,227,.7)}
+.slogan{grid-row:1;align-self:start;margin-top:215px;font-size:calc(26px * var(--s-slogan,1));font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#f2c9a0}
+.titulo{grid-row:1;align-self:end;margin-bottom:34px;font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;font-size:calc(168px * var(--s-titulo,1));line-height:.9;text-transform:uppercase;letter-spacing:.015em}
+.precio{grid-row:2;align-self:end;margin-bottom:-70px;z-index:2;font-family:"Bebas Neue",Impact,sans-serif;font-size:calc(190px * var(--s-precio,1));line-height:1;background:#f3ede3;color:#8f4a2c;padding:6px 44px 0;border-radius:18px;rotate:-4deg;box-shadow:0 14px 30px rgba(0,0,0,.3)}
+.contiene{grid-row:3;align-self:start;margin-top:120px;font-size:calc(36px * var(--s-contiene,1));font-weight:500;line-height:1.55}
+.tyc{position:absolute;left:80px;right:80px;bottom:64px;text-align:center;font-size:calc(21px * var(--s-tyc,1));letter-spacing:.2em;text-transform:uppercase;color:rgba(243,237,227,.7)}
 [data-logo^="abajo"] .logo{bottom:120px;height:96px}

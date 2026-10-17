@@ -29,10 +29,10 @@ html,body{background:#14120f}
 .velo{background:linear-gradient(to top,rgba(20,18,15,.94) 0%,rgba(20,18,15,.7) 24%,rgba(20,18,15,.1) 55%)}
 .texto{position:absolute;left:0;right:0;top:980px;padding:70px 84px;display:grid;grid-template-columns:1fr auto;align-items:end;column-gap:30px;color:#f3ede3}
 .texto::before{content:'';position:absolute;inset:-70px 0;background:#986a4c;clip-path:polygon(0 17%,100% 0,100% 83%,0 100%);z-index:-1}
-.slogan{grid-column:1 / -1;font-size:24px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:#f6dcc0;margin-bottom:6px}
-.titulo{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;font-size:150px;line-height:.92;letter-spacing:.01em;text-transform:uppercase}
-.precio{font-family:"Bebas Neue",Impact,sans-serif;font-size:210px;line-height:.85;color:#14120f}
-.contiene{position:absolute;top:100%;left:84px;right:84px;margin-top:130px;font-size:36px;font-weight:500;line-height:1.3}
+.slogan{grid-column:1 / -1;font-size:calc(24px * var(--s-slogan,1));font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:#f6dcc0;margin-bottom:6px}
+.titulo{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;font-size:calc(150px * var(--s-titulo,1));line-height:.92;letter-spacing:.01em;text-transform:uppercase}
+.precio{font-family:"Bebas Neue",Impact,sans-serif;font-size:calc(210px * var(--s-precio,1));line-height:.85;color:#14120f}
+.contiene{position:absolute;top:100%;left:84px;right:84px;margin-top:130px;font-size:calc(36px * var(--s-contiene,1));font-weight:500;line-height:1.3}
 .contiene li{padding:14px 0 14px 46px;position:relative}
 .contiene li::before{content:'';position:absolute;left:0;top:26px;width:26px;height:4px;background:#c08a5e}
-.tyc{position:absolute;left:84px;right:84px;bottom:84px;font-size:20px;letter-spacing:.18em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.6)}
+.tyc{position:absolute;left:84px;right:84px;bottom:84px;font-size:calc(20px * var(--s-tyc,1));letter-spacing:.18em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.6)}

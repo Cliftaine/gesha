@@ -351,20 +351,20 @@
     "unit": "c/u",
     "items": [
       {
-        "icon": "accent-plant",
-        "label": "Leche vegetal"
+        "icon": "lib:leche-avena",
+        "label": "Leche de avena"
       },
       {
-        "icon": "accent-cream",
+        "icon": "lib:crema-batida",
         "label": "Crema batida"
       },
       {
-        "icon": "accent-tapioca",
+        "icon": "lib:tapioca",
         "label": "Tapioca"
       },
       {
-        "icon": "accent-jelly",
-        "label": "Jellys"
+        "icon": "lib:cold-foam",
+        "label": "Cold Foam"
       }
     ]
   },

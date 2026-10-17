@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  12 · Franja vertical — diseño de promoción incluido en Gesha (1080×1920).
+  Foto en una franja vertical a la izquierda y texto apilado a la derecha sobre fondo claro.
+  Todos los diseños "base-…" comparten los mismos campos, así que una promo
+  puede cambiar de diseño sin perder lo capturado. Copia esta carpeta como
+  punto de partida para tu propia plantilla (.zip con index.html + style.css).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>12 · Franja vertical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<style>.slide{--s-slogan:{{size:slogan|100}};--s-titulo:{{size:titulo|100}};--s-precio:{{size:precio|100}};--s-contiene:{{size:contiene|100}};--s-tyc:{{size:tyc|100}}}</style>
+</head>
+<body>
+<main class="slide entra" data-logo="{{opt:logo_pos|abajo-derecha,arriba-izquierda,arriba-centro,arriba-derecha,abajo-izquierda,abajo-centro,oculto}}">
+  <img class="foto" src="{{img:foto|https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=1400&q=80&auto=format&fit=crop}}" alt="" style="object-position:{{pos:foto|50% 50%}}" onerror="this.style.display='none'"/>
+  <div class="velo"></div>
+  <img class="logo" src="{{img:logo|/assets/isotipos/manta-03.svg}}" alt="" onerror="this.style.display='none'"/>
+  <section class="texto">
+    <p class="slogan">{{slogan|Desayuno completo}}</p>
+    <h1 class="titulo">{{titulo|Huevos al gusto}}</h1>
+    <div class="precio">{{precio|$66}}</div>
+    <ul class="contiene">{{list:contiene|Frijoles refritos;Pan o tortillas;Café americano}}</ul>
+  </section>
+  <p class="tyc">{{tyc|Hasta las 12:00. Salsas de la casa.}}</p>
+</main>
+<script>
+  // El carrusel avisa cuando este slide entra: se reinicia la animación.
+  addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'gesha:slide-active') return;
+    const s = document.querySelector('.slide');
+    s.classList.remove('entra');
+    void s.offsetWidth;
+    s.classList.add('entra');
+  });
+</script>
+</body>
+</html>

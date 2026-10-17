@@ -113,10 +113,24 @@
     body.classList.toggle('show-fs', !ok);
   }
 
+  // Pointer Lock oculta el puntero a nivel del navegador, aunque el CSS
+  // cursor:none no baste (TVs con control de puntero). Requiere un gesto.
+  function hidePointer() {
+    const el = document.documentElement;
+    if (document.pointerLockElement || !el.requestPointerLock) return;
+    try {
+      const p = el.requestPointerLock();
+      if (p && p.catch) p.catch(() => {});
+    } catch { /* sin soporte */ }
+  }
+
   fsBtn.addEventListener('click', async () => {
+    hidePointer();
     await goFullscreen();
     body.classList.remove('show-fs');
   });
+  // Cualquier clic/toque posterior (p. ej. el OK del control) vuelve a esconderlo.
+  document.addEventListener('pointerdown', hidePointer);
 
   document.addEventListener('fullscreenchange', () => {
     // Si alguien sale de fullscreen (Esc / control), reofrecemos el botón.

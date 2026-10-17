@@ -1,0 +1,39 @@
+/* ── Base común de los diseños incluidos (1080×1920) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#14120f}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.velo{position:absolute;inset:0;pointer-events:none}
+.texto,.tyc{z-index:4}
+.contiene{list-style:none}
+/* Campo vacío en el panel ⇒ el elemento desaparece */
+.slogan:empty,.titulo:empty,.precio:empty,.contiene:empty,.tyc:empty{display:none}
+/* Logo: posición elegible desde el panel (data-logo) */
+.logo{position:absolute;z-index:6;height:120px;width:auto;max-width:340px;object-fit:contain}
+[data-logo="arriba-izquierda"] .logo{top:72px;left:80px}
+[data-logo="arriba-centro"] .logo{top:72px;left:50%;translate:-50% 0}
+[data-logo="arriba-derecha"] .logo{top:72px;right:80px}
+[data-logo="abajo-izquierda"] .logo{bottom:140px;left:80px}
+[data-logo="abajo-centro"] .logo{bottom:140px;left:50%;translate:-50% 0}
+[data-logo="abajo-derecha"] .logo{bottom:140px;right:80px}
+[data-logo="oculto"] .logo{display:none}
+/* Entrada escalonada: corre al cargar y cada vez que el slide entra al carrusel */
+.entra .texto > *,.entra .tyc{animation:sube .8s cubic-bezier(.2,.7,.2,1) both}
+.entra .texto > :nth-child(2){animation-delay:.12s}
+.entra .texto > :nth-child(3){animation-delay:.24s}
+.entra .texto > :nth-child(4){animation-delay:.36s}
+.entra .tyc{animation-delay:.5s}
+@keyframes sube{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ── 11 · Etiqueta: Foto completa con una etiqueta colgante que lleva el precio; texto abajo centrado. ── */
+.velo{background:linear-gradient(to top,rgba(20,18,15,.9) 0%,rgba(20,18,15,.25) 55%,rgba(20,18,15,.15) 100%)}
+.texto{position:absolute;left:84px;right:84px;bottom:190px;display:flex;flex-direction:column;align-items:center;text-align:center;color:#f3ede3}
+.precio{position:absolute;right:120px;top:-1000px;width:250px;height:330px;background:#f7f2ea;color:#7a5a3c;border-radius:18px 18px 22px 22px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:36px;font-family:Fraunces,Georgia,serif;font-weight:700;font-size:calc(96px * var(--s-precio,1));line-height:1;box-shadow:0 24px 50px rgba(0,0,0,.45);rotate:6deg;transform-origin:50% -60px;animation:cuelga 5s ease-in-out infinite}
+.precio::before{content:'';position:absolute;top:26px;left:50%;translate:-50% 0;width:34px;height:34px;border-radius:50%;background:#14120f;box-shadow:inset 0 0 0 6px #d9c9ad}
+.precio::after{content:'';position:absolute;top:-560px;left:50%;width:3px;height:560px;background:rgba(243,237,227,.7)}
+@keyframes cuelga{0%,100%{rotate:6deg}50%{rotate:-4deg}}
+.slogan{font-size:calc(21px * var(--s-slogan,1));font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:#d9b48a;margin-bottom:22px}
+.titulo{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:calc(112px * var(--s-titulo,1));line-height:.98;letter-spacing:-.015em;max-width:900px}
+.contiene{margin-top:28px;font-size:calc(28px * var(--s-contiene,1));line-height:1.5;color:rgba(243,237,227,.86)}
+.contiene li{display:inline}.contiene li + li::before{content:'  ·  ';color:#d9b48a}
+.tyc{position:absolute;left:84px;right:84px;bottom:90px;text-align:center;font-size:calc(17px * var(--s-tyc,1));letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:rgba(243,237,227,.6)}

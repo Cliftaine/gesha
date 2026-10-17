@@ -6,6 +6,9 @@
 //   {{img:foto|foto.jpg}} campo de imagen (default = archivo del paquete)
 //   {{list:contiene|A;B}}  lista: una línea por elemento → <li>…</li>
 //   {{opt:logo_pos|a,b,c}} selector de opciones (la primera es el default)
+//   {{size:titulo|100}}    tamaño del texto `titulo` en % (el panel lo edita con
+//                          −/+ y lo guarda en values.titulo_size); rinde un factor
+//                          para calc(): 100 → 1, 130 → 1.3
 //   {{pos:foto|50% 50%}}   encuadre de la imagen `foto` (object-position /
 //                          background-position); el panel lo edita arrastrando
 //                          y lo guarda en values.foto_pos
@@ -20,6 +23,7 @@ const fs = require('fs');
 const path = require('path');
 const store = require('./store');
 const { readZip } = require('./unzip');
+const { isVideo } = require('./media');
 
 const ROOT = path.join(__dirname, '..', '..', 'data', 'promo-packages');
 const BUILTIN_ROOT = path.join(__dirname, '..', 'promo-layouts');
@@ -31,7 +35,7 @@ const ALLOWED_EXT = new Set([
   '.woff', '.woff2', '.ttf', '.otf', '.mp4', '.webm',
 ]);
 
-const PLACEHOLDER = /\{\{\s*(img:|list:|opt:|pos:)?([a-zA-Z0-9_-]+)\s*(?:\|([^}]*))?\}\}/g;
+const PLACEHOLDER = /\{\{\s*(img:|list:|opt:|pos:|size:)?([a-zA-Z0-9_-]+)\s*(?:\|([^}]*))?\}\}/g;
 const POS = /^\d{1,3}% \d{1,3}%$/;
 
 function index() {
@@ -139,10 +143,12 @@ function normalizeEntries(entries) {
 function scanFields(html, labels = {}) {
   const fields = new Map();
   const framed = new Set(); // imágenes con {{pos:…}} → encuadre editable
+  const sized = []; // textos con {{size:…}} → tamaño editable (se listan aparte)
   // Los comentarios HTML no cuentan (suelen documentar la sintaxis).
   for (const m of html.replace(/<!--[\s\S]*?-->/g, '').matchAll(PLACEHOLDER)) {
     const key = m[2];
     if (m[1] === 'pos:') { framed.add(key); continue; }
+    if (m[1] === 'size:') { if (!sized.includes(key)) sized.push(key); continue; }
     const def = (m[3] || '').trim();
     const prev = fields.get(key);
     if (prev) {
@@ -158,6 +164,7 @@ function scanFields(html, labels = {}) {
     fields.set(key, field);
   }
   for (const key of framed) if (fields.get(key)?.type === 'image') fields.get(key).framing = true;
+  for (const key of sized) if (fields.get(key)) fields.get(key).sizable = true;
   return [...fields.values()];
 }
 
@@ -248,8 +255,13 @@ function render(id, values = {}) {
   const file = path.join(dirOf(id), 'index.html');
   if (!fs.existsSync(file)) return null;
   const html = fs.readFileSync(file, 'utf8');
-  return html.replace(PLACEHOLDER, (_, kind, key, def) => {
+  const videos = new Set();
+  const out = html.replace(PLACEHOLDER, (_, kind, key, def) => {
     const fallback = (def || '').trim();
+    if (kind === 'size:') {
+      const pct = Number(values[`${key}_size`]) || Number(fallback) || 100;
+      return String(Math.min(200, Math.max(50, pct)) / 100);
+    }
     if (kind === 'pos:') {
       const pos = values[`${key}_pos`];
       return POS.test(pos) ? pos : (POS.test(fallback) ? fallback : '50% 50%');
@@ -267,8 +279,67 @@ function render(id, values = {}) {
         .map((line) => `<li>${escapeHtml(line)}</li>`)
         .join('');
     }
-    return escapeHtml(v != null ? v : fallback);
+    const value = escapeHtml(v != null ? v : fallback);
+    if (kind === 'img:' && isVideo(v != null ? v : fallback)) videos.add(value);
+    return value;
   });
+  return injectRuntime(videosInPlace(out, videos));
+}
+
+// Un campo img: con un .mp4/.webm convierte su <img> en <video>, conservando
+// clase y estilo (object-fit/object-position), así los layouts no cambian.
+function videosInPlace(html, videos) {
+  let result = html;
+  for (const url of videos) {
+    const src = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const tag = new RegExp(`<img\\b([^>]*?)\\bsrc="${src}"([^>]*?)\\/?>`, 'g');
+    result = result.replace(tag, (_, before, after) => {
+      const attrs = `${before} ${after}`.replace(/\s(onerror|alt)="[^"]*"/g, '').replace(/\s+/g, ' ').trim();
+      return `<video ${attrs} src="${url}" data-gesha muted loop playsinline preload="metadata" disablepictureinpicture></video>`;
+    });
+  }
+  return result;
+}
+
+// Puente con el carrusel (inyectado en todo paquete):
+//  - gesha:slide-inactive pausa animaciones y videos (un slide oculto no gasta
+//    GPU ni decodificador; las TVs tienen pocos); gesha:slide-active los
+//    reanuda y reinicia el video desde el principio.
+//  - Reporta la duración del video (gesha:duration) para que el slide dure
+//    al menos un ciclo completo.
+//  - Abierto directo (sin carrusel), el video arranca solo.
+const RUNTIME = `<script data-gesha-runtime>
+(function () {
+  var css = document.createElement('style');
+  css.textContent = '.gesha-off *{animation-play-state:paused !important}';
+  document.head.appendChild(css);
+  var vids = function () { return Array.prototype.slice.call(document.querySelectorAll('video[data-gesha]')); };
+  var framed = window.parent !== window;
+  var report = function () {
+    var d = 0;
+    vids().forEach(function (v) { if (isFinite(v.duration)) d = Math.max(d, v.duration); });
+    if (d && framed) window.parent.postMessage({ type: 'gesha:duration', seconds: d }, '*');
+  };
+  var play = function (v) { try { v.currentTime = 0; } catch (e) {} var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+  vids().forEach(function (v) { v.addEventListener('loadedmetadata', report); if (!framed) play(v); });
+  report();
+  addEventListener('message', function (e) {
+    var t = e.data && e.data.type;
+    if (t === 'gesha:slide-active') {
+      document.documentElement.classList.remove('gesha-off');
+      vids().forEach(play);
+      report();
+    } else if (t === 'gesha:slide-inactive') {
+      document.documentElement.classList.add('gesha-off');
+      vids().forEach(function (v) { v.pause(); });
+    }
+  });
+})();
+</script>`;
+
+function injectRuntime(html) {
+  const at = html.lastIndexOf('</body>');
+  return at === -1 ? html + RUNTIME : html.slice(0, at) + RUNTIME + '\n' + html.slice(at);
 }
 
 module.exports = { ROOT, BUILTIN_ROOT, SIZES, setSize, orientationOf, list, get, install, remove, render, scanFields };

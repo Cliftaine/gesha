@@ -230,16 +230,56 @@ router.get('/weather', async (req, res, next) => {
   }
 });
 
-// Subida de imágenes (promos / strip de fotos). Body binario crudo + query name.
+// Subida de imágenes y videos (promos / strip de fotos). Body binario crudo.
 const UPLOADS = path.join(__dirname, '..', '..', 'public', 'uploads');
 const IMG_TYPES = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp', 'image/avif': '.avif' };
+const VIDEO_TYPES = { 'video/mp4': '.mp4', 'video/webm': '.webm' };
+const VIDEO_MAX = 300 * 1024 * 1024;
+const UPLOAD_ERROR = 'Envía el binario de una imagen (png/jpeg/webp/avif) o un video (mp4/webm)';
+
+// Videos: directo a disco por stream (no caben cómodos en memoria).
+function uploadVideo(req, res, ext) {
+  if (Number(req.get('content-length')) > VIDEO_MAX) {
+    return res.status(413).json({ error: 'El video pasa de 300 MB' });
+  }
+  const name = crypto.randomBytes(8).toString('hex') + ext;
+  const file = path.join(UPLOADS, name);
+  const out = fs.createWriteStream(file);
+  let size = 0;
+  let failed = false;
+  const fail = (status, error) => {
+    if (failed) return;
+    failed = true;
+    req.unpipe(out);
+    out.destroy();
+    fs.rm(file, { force: true }, () => {});
+    res.status(status).json({ error });
+  };
+  req.on('data', (chunk) => {
+    size += chunk.length;
+    if (size > VIDEO_MAX) fail(413, 'El video pasa de 300 MB');
+  });
+  req.on('aborted', () => fail(400, 'Subida interrumpida'));
+  out.on('error', () => fail(500, 'No se pudo guardar el video'));
+  out.on('finish', () => {
+    if (failed) return;
+    if (!size) return fail(400, UPLOAD_ERROR);
+    res.json({ ok: true, url: `/uploads/${name}` });
+  });
+  req.pipe(out);
+}
+
 router.post(
   '/uploads',
+  (req, res, next) => {
+    const ext = VIDEO_TYPES[req.get('content-type')];
+    return ext ? uploadVideo(req, res, ext) : next();
+  },
   express.raw({ type: Object.keys(IMG_TYPES), limit: '25mb' }), // fotos 4K
   (req, res) => {
     const ext = IMG_TYPES[req.get('content-type')];
     if (!ext || !Buffer.isBuffer(req.body) || !req.body.length) {
-      return res.status(400).json({ error: 'Envía el binario de una imagen (png/jpeg/webp/avif)' });
+      return res.status(400).json({ error: UPLOAD_ERROR });
     }
     const name = crypto.randomBytes(8).toString('hex') + ext;
     fs.writeFileSync(path.join(UPLOADS, name), req.body);
